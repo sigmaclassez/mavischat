@@ -18,220 +18,496 @@
             --msg-own: #2b5278;
             --msg-other: #182533;
             --danger: #e74c3c;
+            --radius: 12px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background: var(--bg); 
             color: var(--text); 
-            /* 100dvh prevents mobile keyboard from covering the input box */
-            height: 100dvh; 
-            width: 100vw;
+            height: 100vh; 
+            height: 100dvh;
             overflow: hidden;
-            -webkit-font-smoothing: antialiased;
+            width: 100%;
         }
 
         /* --- AUTH SCREEN --- */
         #auth-screen {
-            display: flex; align-items: center; justify-content: center; height: 100%;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh;
+            height: 100dvh;
             background: linear-gradient(135deg, #1a2a3a 0%, #0e1e2e 100%);
+            padding: 20px;
         }
         .auth-card {
-            background: var(--surface); padding: 40px; border-radius: 16px; width: 90%; max-width: 420px;
-            text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: var(--surface); 
+            padding: 40px 30px; 
+            border-radius: 16px; 
+            width: 100%; 
+            max-width: 400px;
+            text-align: center; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
+        .auth-logo {
+            width: 72px; 
+            height: 72px; 
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+        .auth-logo svg { width: 36px; height: 36px; color: white; }
         .google-btn {
-            display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%;
-            padding: 14px; background: white; color: #333; border: none; border-radius: 8px;
-            font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 30px; transition: 0.2s;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 12px; 
+            width: 100%;
+            padding: 14px; 
+            background: white; 
+            color: #333; 
+            border: none; 
+            border-radius: 8px;
+            font-size: 15px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            margin-top: 30px; 
+            transition: 0.2s;
         }
         .google-btn:hover { background: #f1f1f1; transform: translateY(-2px); }
+        .google-btn:active { transform: translateY(0); }
 
         /* --- MAIN APP --- */
         #app { 
             display: none; 
-            height: 100%; 
-            width: 100%;
+            height: 100vh;
+            height: 100dvh;
             flex-direction: row; 
-            position: relative; 
-            overflow: hidden;
+            position: relative;
+            width: 100%;
         }
         #app.active { display: flex; }
-        
+
         /* Sidebar */
         .sidebar {
-            width: 320px; background: var(--surface); border-right: 1px solid var(--border);
-            display: flex; flex-direction: column; flex-shrink: 0; height: 100%;
+            width: 320px; 
+            min-width: 280px;
+            background: var(--surface); 
+            border-right: 1px solid var(--border);
+            display: flex; 
+            flex-direction: column; 
+            flex-shrink: 0;
+            height: 100%;
+            transition: transform 0.3s ease;
         }
         .sidebar-header {
-            padding: 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 16px; 
+            border-bottom: 1px solid var(--border); 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between;
+            min-height: 60px;
         }
         .my-profile { display: flex; align-items: center; gap: 10px; }
-        .avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: var(--border); flex-shrink: 0; }
-        .logout-btn { background: none; border: none; color: var(--danger); cursor: pointer; font-weight: 600; }
-        
-        .chat-list { flex: 1; overflow-y: auto; }
+        .avatar { 
+            width: 40px; 
+            height: 40px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            background: var(--border); 
+            flex-shrink: 0;
+        }
+        .logout-btn { 
+            background: none; 
+            border: none; 
+            color: var(--danger); 
+            cursor: pointer; 
+            font-weight: 600;
+            font-size: 13px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: 0.2s;
+        }
+        .logout-btn:hover { background: rgba(231,76,60,0.1); }
+
+        .section-title {
+            padding: 10px 16px; 
+            background: #131b24; 
+            font-size: 11px; 
+            color: var(--text-secondary); 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .chat-list { 
+            flex: 1; 
+            overflow-y: auto; 
+            -webkit-overflow-scrolling: touch;
+        }
         .contact-item {
-            display: flex; align-items: center; gap: 12px; padding: 12px 16px; cursor: pointer; border-bottom: 1px solid #1a242f; transition: 0.2s;
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            padding: 12px 16px; 
+            cursor: pointer; 
+            border-bottom: 1px solid #1a242f; 
+            transition: 0.2s;
+            min-height: 64px;
         }
         .contact-item:hover { background: var(--surface-hover); }
         .contact-item.active { background: var(--accent); }
+        .contact-name {
+            font-weight: 500; 
+            font-size: 15px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .contact-email {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
 
         /* Chat Area */
         .chat-area { 
-            flex: 1; display: flex; flex-direction: column; background: var(--bg); position: relative; height: 100%;
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            background: var(--bg); 
+            position: relative;
+            height: 100%;
+            width: 100%;
         }
-        
+
         .chat-header {
-            padding: 12px 20px; background: var(--surface); border-bottom: 1px solid var(--border);
-            display: flex; align-items: center; justify-content: space-between; min-height: 65px; flex-shrink: 0;
+            padding: 10px 16px; 
+            background: var(--surface); 
+            border-bottom: 1px solid var(--border);
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            min-height: 60px;
+            flex-shrink: 0;
         }
-        .chat-header-info { display: flex; align-items: center; gap: 12px; }
-        
+        .chat-header-info { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px;
+            flex: 1;
+            min-width: 0;
+        }
+        .chat-header-name {
+            font-weight: 600; 
+            font-size: 15px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .chat-header-status {
+            font-size: 12px;
+            color: var(--accent-light);
+        }
+
         .back-btn {
-            display: none; background: none; border: none; color: var(--text-secondary);
-            font-size: 26px; margin-right: 4px; cursor: pointer; padding: 0 10px 0 0;
+            display: none;
+            background: none; 
+            border: none; 
+            color: var(--text);
+            font-size: 22px; 
+            margin-right: 4px; 
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
         }
-        .back-btn:hover { color: var(--text); }
+        .back-btn:hover { background: var(--surface-hover); }
 
         .delete-chat-btn {
-            background: rgba(231,76,60,0.1); color: var(--danger); border: 1px solid rgba(231,76,60,0.3);
-            padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.2s;
+            background: rgba(231,76,60,0.1); 
+            color: var(--danger); 
+            border: 1px solid rgba(231,76,60,0.3);
+            padding: 6px 12px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-size: 12px; 
+            font-weight: 600; 
+            transition: 0.2s;
+            flex-shrink: 0;
+            white-space: nowrap;
         }
         .delete-chat-btn:hover { background: var(--danger); color: white; }
 
         .messages-container {
-            flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px;
+            flex: 1; 
+            overflow-y: auto; 
+            padding: 16px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 8px;
+            -webkit-overflow-scrolling: touch;
         }
-        .message-wrapper { display: flex; flex-direction: column; max-width: 85%; }
+        .message-wrapper { 
+            display: flex; 
+            flex-direction: column; 
+            max-width: 80%;
+            animation: msgIn 0.2s ease-out;
+        }
+        @keyframes msgIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         .message-wrapper.own { align-self: flex-end; align-items: flex-end; }
         .message-wrapper.other { align-self: flex-start; align-items: flex-start; }
-        
+
         .message {
-            padding: 10px 14px; border-radius: 16px; font-size: 14.5px; line-height: 1.4; display: flex; align-items: flex-end; gap: 8px; position: relative;
+            padding: 10px 14px; 
+            border-radius: 16px; 
+            font-size: 14.5px; 
+            line-height: 1.4; 
+            display: flex; 
+            align-items: flex-end; 
+            gap: 8px;
+            word-break: break-word;
         }
-        .message-wrapper.own .message { background: var(--msg-own); border-bottom-right-radius: 4px; }
-        .message-wrapper.other .message { background: var(--msg-other); border-bottom-left-radius: 4px; }
-        
-        .msg-time { font-size: 11px; opacity: 0.6; margin-bottom: -2px; flex-shrink: 0; }
+        .message-wrapper.own .message { 
+            background: var(--msg-own); 
+            border-bottom-right-radius: 4px; 
+        }
+        .message-wrapper.other .message { 
+            background: var(--msg-other); 
+            border-bottom-left-radius: 4px; 
+        }
+
+        .msg-time { 
+            font-size: 11px; 
+            opacity: 0.6; 
+            flex-shrink: 0; 
+            margin-top: 2px;
+        }
         .del-msg-icon {
-            font-size: 12px; cursor: pointer; color: #ff6b6b; opacity: 0; transition: 0.2s; margin-top: 4px;
+            font-size: 11px; 
+            cursor: pointer; 
+            color: #ff6b6b; 
+            opacity: 0; 
+            transition: 0.2s; 
+            margin-top: 4px;
+            padding: 2px 6px;
+            border-radius: 4px;
         }
+        .del-msg-icon:hover { background: rgba(255,107,107,0.1); }
         .message-wrapper.own:hover .del-msg-icon { opacity: 1; }
 
         .input-area {
-            padding: 12px 16px; background: var(--surface); display: flex; gap: 10px; align-items: center; flex-shrink: 0;
-            padding-bottom: max(12px, env(safe-area-inset-bottom));
+            padding: 10px 12px; 
+            background: var(--surface); 
+            display: flex; 
+            gap: 8px; 
+            align-items: center;
+            flex-shrink: 0;
+            border-top: 1px solid var(--border);
         }
         .input-area input {
-            flex: 1; padding: 12px 16px; border-radius: 24px; border: none; background: var(--bg); color: white; font-size: 15px; outline: none;
+            flex: 1; 
+            padding: 12px 16px; 
+            border-radius: 24px; 
+            border: none; 
+            background: var(--bg); 
+            color: white; 
+            font-size: 15px; 
+            outline: none;
+            min-width: 0;
         }
+        .input-area input::placeholder { color: #4a5a6a; }
         .send-btn {
-            width: 44px; height: 44px; border-radius: 50%; border: none; background: var(--accent-light); color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+            width: 44px; 
+            height: 44px; 
+            border-radius: 50%; 
+            border: none; 
+            background: var(--accent-light); 
+            color: white; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            flex-shrink: 0;
+            transition: 0.2s;
         }
-        .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        
+        .send-btn:hover { background: #4da5e7; transform: scale(1.05); }
+        .send-btn:active { transform: scale(0.95); }
+        .send-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
         .empty-state {
-            flex: 1; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); text-align: center; flex-direction: column; padding: 20px;
+            flex: 1; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: var(--text-secondary); 
+            text-align: center; 
+            flex-direction: column; 
+            padding: 20px;
+        }
+        .empty-state-icon {
+            font-size: 48px; 
+            margin-bottom: 16px;
         }
         .hidden { display: none !important; }
 
         /* =========================================
-           📱 MOBILE RESPONSIVE FIX (SLIDE-OVER)
+           📱 MOBILE RESPONSIVE (max-width: 768px)
            ========================================= */
         @media (max-width: 768px) {
             .sidebar { 
                 width: 100%; 
-                border-right: none; 
-            }
-            
-            .chat-area {
                 position: absolute;
-                top: 0;
                 left: 0;
-                width: 100%;
-                height: 100%;
+                top: 0;
+                bottom: 0;
                 z-index: 10;
-                /* Push off-screen to the right by default */
-                transform: translateX(100%);
-                transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+                transform: translateX(0);
             }
-            
-            /* When chat is active, slide it in */
-            #app.chat-active .chat-area {
+            .sidebar.hidden-mobile {
+                transform: translateX(-100%);
+            }
+
+            .chat-area {
+                width: 100%;
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                z-index: 5;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+            }
+            .chat-area.chat-visible {
                 transform: translateX(0);
             }
 
-            .back-btn { display: block; }
-            .empty-state { display: none !important; }
-            .message-wrapper { max-width: 90%; }
+            .back-btn { 
+                display: flex; 
+            }
+
+            .empty-state {
+                display: none !important;
+            }
+
+            .message-wrapper { 
+                max-width: 85%; 
+            }
+
+            .auth-card {
+                padding: 30px 20px;
+            }
+
+            .delete-chat-btn {
+                padding: 5px 10px;
+                font-size: 11px;
+            }
         }
+
+        /* Desktop: always show both */
+        @media (min-width: 769px) {
+            .sidebar {
+                position: relative;
+                transform: none !important;
+            }
+            .chat-area {
+                position: relative;
+                transform: none !important;
+            }
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #2a3a4a; border-radius: 2px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3a4a5a; }
     </style>
 </head>
 <body>
 
+    <!-- AUTH SCREEN -->
     <div id="auth-screen">
         <div class="auth-card">
-            <h1 style="margin-bottom: 4px;">Sigma Community</h1>
-            <p style="color: var(--text-secondary); font-size: 16px; font-weight: 500;">by Alok Sir</p>
-            
+            <div class="auth-logo">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 2L2 7l10 5 10-5-10-5z"/>
+                    <polyline points="2 17 12 22 22 17"/>
+                    <polyline points="2 12 12 17 22 12"/>
+                </svg>
+            </div>
+            <h1 style="margin-bottom: 4px; font-size: 24px;">Sigma Community</h1>
+            <p style="color: var(--text-secondary); font-size: 15px; font-weight: 500;">by Alok Sir</p>
+
             <button class="google-btn" id="login-btn">
                 <svg width="20" height="20" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
                 Sign in with Google
             </button>
             <p id="auth-error" style="color: #ff6b6b; font-size: 13px; margin-top: 15px; display: none;"></p>
-            
+
             <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border);">
                 <p style="color: var(--accent-light); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Sponsored by Sigma Coaching Classes</p>
             </div>
         </div>
     </div>
 
+    <!-- MAIN APP -->
     <div id="app">
-        
-        <div class="sidebar">
+
+        <!-- SIDEBAR -->
+        <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="my-profile">
-                    <img src="" id="my-avatar" class="avatar">
-                    <div>
-                        <div id="my-name" style="font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;"></div>
+                    <img src="" id="my-avatar" class="avatar" alt="Me">
+                    <div style="min-width: 0;">
+                        <div id="my-name" style="font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></div>
                         <div style="font-size: 12px; color: var(--accent-light);">Online</div>
                     </div>
                 </div>
                 <button class="logout-btn" id="logout-btn">Log Out</button>
             </div>
-            
-            <div style="padding: 10px 16px; background: #131b24; font-size: 12px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px;">
-                Available Users
-            </div>
-            <div class="chat-list" id="contact-list">
-                </div>
+
+            <div class="section-title">Available Users</div>
+            <div class="chat-list" id="contact-list"></div>
         </div>
 
-        <div class="chat-area">
-            
+        <!-- CHAT AREA -->
+        <div class="chat-area" id="chat-area">
+
+            <!-- Empty State -->
             <div class="empty-state" id="empty-state">
-                <div style="font-size: 48px; margin-bottom: 16px;">💬</div>
+                <div class="empty-state-icon">💬</div>
                 <h3 style="margin-bottom: 4px;">Welcome to Sigma Community</h3>
                 <p style="color: var(--text-secondary); font-size: 15px;">by Alok Sir</p>
                 <p style="margin-top: 24px; font-size: 12px; color: var(--accent-light); text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Sponsored by Sigma Coaching Classes</p>
             </div>
 
+            <!-- Active Chat -->
             <div id="active-chat" class="hidden" style="display: flex; flex-direction: column; height: 100%;">
-                
+
                 <div class="chat-header">
                     <div class="chat-header-info">
                         <button class="back-btn" id="back-btn">←</button>
-                        <img src="" id="chat-avatar" class="avatar">
-                        <span id="chat-name" style="font-weight: 600; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px;"></span>
+                        <img src="" id="chat-avatar" class="avatar" alt="">
+                        <div style="min-width: 0;">
+                            <div class="chat-header-name" id="chat-name"></div>
+                            <div class="chat-header-status">online</div>
+                        </div>
                     </div>
                     <button class="delete-chat-btn" id="clear-chat-btn">Clear Chat</button>
                 </div>
 
-                <div class="messages-container" id="messages">
-                    </div>
+                <div class="messages-container" id="messages"></div>
 
                 <div class="input-area">
                     <input type="text" id="msg-input" placeholder="Type a message..." autocomplete="off">
@@ -268,7 +544,9 @@
         let unsubUsers = null;
         let unsubMessages = null;
 
-        // --- AUTHENTICATION FLOW ---
+        const isMobile = () => window.innerWidth <= 768;
+
+        // --- AUTHENTICATION ---
         document.getElementById('login-btn').onclick = async () => {
             try {
                 await signInWithPopup(auth, provider);
@@ -286,7 +564,7 @@
                 currentUser = user;
                 document.getElementById('auth-screen').style.display = 'none';
                 document.getElementById('app').classList.add('active');
-                
+
                 document.getElementById('my-name').textContent = user.displayName;
                 document.getElementById('my-avatar').src = user.photoURL;
 
@@ -307,7 +585,7 @@
             }
         });
 
-        // --- LOAD USERS (SIDEBAR) ---
+        // --- LOAD USERS ---
         function loadUsers() {
             if(unsubUsers) unsubUsers();
             unsubUsers = onSnapshot(collection(db, 'users'), (snapshot) => {
@@ -319,8 +597,14 @@
 
                     const div = document.createElement('div');
                     div.className = 'contact-item';
-                    div.innerHTML = `<img src="${user.photo}" class="avatar"><div style="font-weight: 500; font-size: 15px;">${user.name}</div>`;
-                    
+                    div.innerHTML = `
+                        <img src="${user.photo}" class="avatar" alt="${user.name}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=2b5278&color=fff'">
+                        <div style="min-width: 0;">
+                            <div class="contact-name">${user.name}</div>
+                            <div class="contact-email">${user.email}</div>
+                        </div>
+                    `;
+
                     div.onclick = () => {
                         document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active'));
                         div.classList.add('active');
@@ -331,7 +615,7 @@
             });
         }
 
-        // --- OPEN CHAT ROOM ---
+        // --- OPEN CHAT ---
         function openChat(targetUser) {
             const ids = [currentUser.uid, targetUser.uid].sort();
             currentRoomId = `${ids[0]}_${ids[1]}`;
@@ -340,20 +624,24 @@
             document.getElementById('active-chat').classList.remove('hidden');
             document.getElementById('chat-name').textContent = targetUser.name;
             document.getElementById('chat-avatar').src = targetUser.photo;
-            
-            // Trigger Mobile Animation
-            document.getElementById('app').classList.add('chat-active');
+
+            // Mobile: slide in chat area
+            if (isMobile()) {
+                document.getElementById('sidebar').classList.add('hidden-mobile');
+                document.getElementById('chat-area').classList.add('chat-visible');
+            }
 
             loadMessages(currentRoomId);
         }
 
-        // --- MOBILE BACK BUTTON ---
+        // --- BACK BUTTON (Mobile) ---
         document.getElementById('back-btn').onclick = () => {
-            document.getElementById('app').classList.remove('chat-active');
+            document.getElementById('sidebar').classList.remove('hidden-mobile');
+            document.getElementById('chat-area').classList.remove('chat-visible');
             document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active'));
         };
 
-        // --- LOAD & RENDER MESSAGES ---
+        // --- LOAD MESSAGES ---
         function loadMessages(roomId) {
             if (unsubMessages) unsubMessages();
             const msgRef = collection(db, 'rooms', roomId, 'messages');
@@ -365,15 +653,15 @@
                 snapshot.forEach((docSnap) => {
                     const data = docSnap.data();
                     const isOwn = data.senderId === currentUser.uid;
-                    const time = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
+                    const time = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '';
                     const div = document.createElement('div');
                     div.className = `message-wrapper ${isOwn ? 'own' : 'other'}`;
                     div.innerHTML = `
                         <div class="message">
-                            <span>${data.text}</span>
+                            <span>${escapeHtml(data.text)}</span>
                             <span class="msg-time">${time}</span>
                         </div>
-                        ${isOwn ? `<div class="del-msg-icon" onclick="window.deleteSingleMessage('${docSnap.id}')">Delete</div>` : ''}
+                        ${isOwn ? `<div class="del-msg-icon" onclick="window.deleteMsg('${docSnap.id}')">Delete</div>` : ''}
                     `;
                     container.appendChild(div);
                 });
@@ -384,6 +672,7 @@
         // --- SEND MESSAGES ---
         const msgInput = document.getElementById('msg-input');
         const sendBtn = document.getElementById('send-btn');
+
         msgInput.oninput = () => sendBtn.disabled = !msgInput.value.trim();
         msgInput.onkeydown = (e) => { if (e.key === 'Enter') sendMessage(); };
         sendBtn.onclick = sendMessage;
@@ -396,23 +685,23 @@
             await addDoc(collection(db, 'rooms', currentRoomId, 'messages'), {
                 text: text, senderId: currentUser.uid, timestamp: serverTimestamp()
             });
+            msgInput.focus();
         }
 
         // --- DELETE LOGIC ---
-        window.deleteSingleMessage = async function(messageId) {
+        window.deleteMsg = async function(msgId) {
             if (!currentRoomId) return;
             if (confirm("Delete this message?")) {
-                await deleteDoc(doc(db, 'rooms', currentRoomId, 'messages', messageId));
+                await deleteDoc(doc(db, 'rooms', currentRoomId, 'messages', msgId));
             }
         };
 
         document.getElementById('clear-chat-btn').onclick = async () => {
             if (!currentRoomId) return;
-            if (confirm("Are you sure you want to permanently delete all messages in this chat?")) {
-                const msgRef = collection(db, 'rooms', currentRoomId, 'messages');
-                const snapshot = await getDocs(query(msgRef));
-                snapshot.forEach(async (docSnap) => {
-                    await deleteDoc(doc(db, 'rooms', currentRoomId, 'messages', docSnap.id));
+            if (confirm("Delete all messages in this chat?")) {
+                const snapshot = await getDocs(query(collection(db, 'rooms', currentRoomId, 'messages')));
+                snapshot.forEach(async (d) => {
+                    await deleteDoc(doc(db, 'rooms', currentRoomId, 'messages', d.id));
                 });
             }
         };
@@ -424,8 +713,23 @@
             document.getElementById('messages').innerHTML = '';
             document.getElementById('empty-state').classList.remove('hidden');
             document.getElementById('active-chat').classList.add('hidden');
-            document.getElementById('app').classList.remove('chat-active');
+            document.getElementById('sidebar').classList.remove('hidden-mobile');
+            document.getElementById('chat-area').classList.remove('chat-visible');
         }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Handle resize
+        window.addEventListener('resize', () => {
+            if (!isMobile()) {
+                document.getElementById('sidebar').classList.remove('hidden-mobile');
+                document.getElementById('chat-area').classList.remove('chat-visible');
+            }
+        });
     </script>
 </body>
 </html>
