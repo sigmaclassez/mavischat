@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sigma Chat - Private Messenger</title>
+    <title>Sigma Community by Alok Sir</title>
     <style>
         :root {
             --bg: #0e0e0e;
@@ -33,7 +33,7 @@
             background: linear-gradient(135deg, #1a2a3a 0%, #0e1e2e 100%);
         }
         .auth-card {
-            background: var(--surface); padding: 40px; border-radius: 16px; width: 100%; max-width: 380px;
+            background: var(--surface); padding: 40px; border-radius: 16px; width: 90%; max-width: 420px;
             text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
         .google-btn {
@@ -44,13 +44,13 @@
         .google-btn:hover { background: #f1f1f1; transform: translateY(-2px); }
 
         /* --- MAIN APP --- */
-        #app { display: none; height: 100vh; flex-direction: row; }
+        #app { display: none; height: 100vh; flex-direction: row; position: relative; }
         #app.active { display: flex; }
         
         /* Sidebar */
         .sidebar {
             width: 320px; background: var(--surface); border-right: 1px solid var(--border);
-            display: flex; flex-direction: column; flex-shrink: 0;
+            display: flex; flex-direction: column; flex-shrink: 0; transition: 0.3s;
         }
         .sidebar-header {
             padding: 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between;
@@ -74,6 +74,14 @@
             display: flex; align-items: center; justify-content: space-between; min-height: 65px;
         }
         .chat-header-info { display: flex; align-items: center; gap: 12px; }
+        
+        /* Back Button (Hidden on Desktop) */
+        .back-btn {
+            display: none; background: none; border: none; color: var(--text-secondary);
+            font-size: 24px; margin-right: 4px; cursor: pointer;
+        }
+        .back-btn:hover { color: var(--text); }
+
         .delete-chat-btn {
             background: rgba(231,76,60,0.1); color: var(--danger); border: 1px solid rgba(231,76,60,0.3);
             padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.2s;
@@ -83,7 +91,7 @@
         .messages-container {
             flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px;
         }
-        .message-wrapper { display: flex; flex-direction: column; max-width: 70%; }
+        .message-wrapper { display: flex; flex-direction: column; max-width: 85%; }
         .message-wrapper.own { align-self: flex-end; align-items: flex-end; }
         .message-wrapper.other { align-self: flex-start; align-items: flex-start; }
         
@@ -93,41 +101,58 @@
         .message-wrapper.own .message { background: var(--msg-own); border-bottom-right-radius: 4px; }
         .message-wrapper.other .message { background: var(--msg-other); border-bottom-left-radius: 4px; }
         
-        .msg-time { font-size: 11px; opacity: 0.6; margin-bottom: -2px; }
+        .msg-time { font-size: 11px; opacity: 0.6; margin-bottom: -2px; flex-shrink: 0; }
         .del-msg-icon {
             font-size: 12px; cursor: pointer; color: #ff6b6b; opacity: 0; transition: 0.2s; margin-top: 4px;
         }
         .message-wrapper.own:hover .del-msg-icon { opacity: 1; }
 
         .input-area {
-            padding: 16px 20px; background: var(--surface); display: flex; gap: 10px; align-items: center;
+            padding: 12px 16px; background: var(--surface); display: flex; gap: 10px; align-items: center; padding-bottom: max(12px, env(safe-area-inset-bottom));
         }
         .input-area input {
             flex: 1; padding: 12px 16px; border-radius: 24px; border: none; background: var(--bg); color: white; font-size: 15px; outline: none;
         }
         .send-btn {
-            width: 44px; height: 44px; border-radius: 50%; border: none; background: var(--accent-light); color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            width: 44px; height: 44px; border-radius: 50%; border: none; background: var(--accent-light); color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         }
         .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
         
         .empty-state {
-            flex: 1; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); text-align: center; flex-direction: column;
+            flex: 1; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); text-align: center; flex-direction: column; padding: 20px;
         }
         .hidden { display: none !important; }
+
+        /* =========================================
+           📱 MOBILE RESPONSIVE MEDIA QUERIES 
+           ========================================= */
+        @media (max-width: 768px) {
+            .sidebar { width: 100%; }
+            .chat-area { display: none; width: 100%; }
+            .back-btn { display: block; }
+            #app.chat-active .sidebar { display: none; }
+            #app.chat-active .chat-area { display: flex; }
+            .empty-state { display: none !important; }
+            .message-wrapper { max-width: 90%; }
+        }
     </style>
 </head>
 <body>
 
     <div id="auth-screen">
         <div class="auth-card">
-            <h1 style="margin-bottom: 8px;">Sigma Classes</h1>
-            <p style="color: var(--text-secondary); font-size: 14px;">Secure Community Messenger</p>
+            <h1 style="margin-bottom: 4px;">Sigma Community</h1>
+            <p style="color: var(--text-secondary); font-size: 16px; font-weight: 500;">by Alok Sir</p>
             
             <button class="google-btn" id="login-btn">
                 <svg width="20" height="20" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
                 Sign in with Google
             </button>
             <p id="auth-error" style="color: #ff6b6b; font-size: 13px; margin-top: 15px; display: none;"></p>
+            
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <p style="color: var(--accent-light); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Sponsored by Sigma Coaching Classes</p>
+            </div>
         </div>
     </div>
 
@@ -156,14 +181,16 @@
             
             <div class="empty-state" id="empty-state">
                 <div style="font-size: 48px; margin-bottom: 16px;">💬</div>
-                <h3>Welcome to Sigma Chat</h3>
-                <p style="margin-top: 8px;">Select a user from the left menu to start chatting securely.</p>
+                <h3 style="margin-bottom: 4px;">Welcome to Sigma Community</h3>
+                <p style="color: var(--text-secondary); font-size: 15px;">by Alok Sir</p>
+                <p style="margin-top: 24px; font-size: 12px; color: var(--accent-light); text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Sponsored by Sigma Coaching Classes</p>
             </div>
 
             <div id="active-chat" class="hidden" style="display: flex; flex-direction: column; height: 100%;">
                 
                 <div class="chat-header">
                     <div class="chat-header-info">
+                        <button class="back-btn" id="back-btn">←</button>
                         <img src="" id="chat-avatar" class="avatar">
                         <span id="chat-name" style="font-weight: 600; font-size: 16px;"></span>
                     </div>
@@ -186,7 +213,6 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-analytics.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
         import { getFirestore, collection, doc, setDoc, addDoc, deleteDoc, getDocs, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
@@ -197,13 +223,10 @@
             projectId: "sigmachat-7b6fc",
             storageBucket: "sigmachat-7b6fc.firebasestorage.app",
             messagingSenderId: "991645777861",
-            appId: "1:991645777861:web:940b910b80fdcd90c815ac",
-            measurementId: "G-2Q93W5FHLD"
+            appId: "1:991645777861:web:940b910b80fdcd90c815ac"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
         const auth = getAuth(app);
         const db = getFirestore(app);
         const provider = new GoogleAuthProvider();
@@ -228,16 +251,13 @@
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // Logged In State
                 currentUser = user;
-                
                 document.getElementById('auth-screen').style.display = 'none';
                 document.getElementById('app').classList.add('active');
                 
                 document.getElementById('my-name').textContent = user.displayName;
                 document.getElementById('my-avatar').src = user.photoURL;
 
-                // Save user to cloud so others see them in the sidebar
                 await setDoc(doc(db, 'users', user.uid), {
                     uid: user.uid,
                     name: user.displayName,
@@ -248,7 +268,6 @@
 
                 loadUsers();
             } else {
-                // Logged Out State
                 currentUser = null;
                 document.getElementById('app').classList.remove('active');
                 document.getElementById('auth-screen').style.display = 'flex';
@@ -259,28 +278,22 @@
         // --- LOAD USERS (SIDEBAR) ---
         function loadUsers() {
             if(unsubUsers) unsubUsers();
-            
             unsubUsers = onSnapshot(collection(db, 'users'), (snapshot) => {
                 const list = document.getElementById('contact-list');
                 list.innerHTML = ''; 
-                
                 snapshot.forEach((docSnap) => {
                     const user = docSnap.data();
-                    if (user.uid === currentUser.uid) return; // Do not show yourself
+                    if (user.uid === currentUser.uid) return; 
 
                     const div = document.createElement('div');
                     div.className = 'contact-item';
-                    div.innerHTML = `
-                        <img src="${user.photo}" class="avatar">
-                        <div style="font-weight: 500; font-size: 15px;">${user.name}</div>
-                    `;
+                    div.innerHTML = `<img src="${user.photo}" class="avatar"><div style="font-weight: 500; font-size: 15px;">${user.name}</div>`;
                     
                     div.onclick = () => {
                         document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active'));
                         div.classList.add('active');
                         openChat(user);
                     };
-                    
                     list.appendChild(div);
                 });
             });
@@ -288,7 +301,6 @@
 
         // --- OPEN CHAT ROOM ---
         function openChat(targetUser) {
-            // Generates a unique, shared Room ID for these two users
             const ids = [currentUser.uid, targetUser.uid].sort();
             currentRoomId = `${ids[0]}_${ids[1]}`;
 
@@ -296,29 +308,37 @@
             document.getElementById('active-chat').classList.remove('hidden');
             document.getElementById('chat-name').textContent = targetUser.name;
             document.getElementById('chat-avatar').src = targetUser.photo;
+            
+            // MOBILE: Trigger CSS class to hide sidebar and show chat
+            document.getElementById('app').classList.add('chat-active');
 
             loadMessages(currentRoomId);
         }
 
+        // --- MOBILE BACK BUTTON ---
+        document.getElementById('back-btn').onclick = () => {
+            // Remove CSS class to show sidebar again and hide chat
+            document.getElementById('app').classList.remove('chat-active');
+            
+            // Un-highlight the contact in the list
+            document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active'));
+        };
+
         // --- LOAD & RENDER MESSAGES ---
         function loadMessages(roomId) {
             if (unsubMessages) unsubMessages();
-
             const msgRef = collection(db, 'rooms', roomId, 'messages');
             const q = query(msgRef, orderBy('timestamp', 'asc'));
 
             unsubMessages = onSnapshot(q, (snapshot) => {
                 const container = document.getElementById('messages');
                 container.innerHTML = ''; 
-                
                 snapshot.forEach((docSnap) => {
                     const data = docSnap.data();
                     const isOwn = data.senderId === currentUser.uid;
                     const time = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
-
                     const div = document.createElement('div');
                     div.className = `message-wrapper ${isOwn ? 'own' : 'other'}`;
-                    
                     div.innerHTML = `
                         <div class="message">
                             <span>${data.text}</span>
@@ -326,10 +346,8 @@
                         </div>
                         ${isOwn ? `<div class="del-msg-icon" onclick="window.deleteSingleMessage('${docSnap.id}')">Delete</div>` : ''}
                     `;
-                    
                     container.appendChild(div);
                 });
-
                 container.scrollTop = container.scrollHeight; 
             });
         }
@@ -337,7 +355,6 @@
         // --- SEND MESSAGES ---
         const msgInput = document.getElementById('msg-input');
         const sendBtn = document.getElementById('send-btn');
-
         msgInput.oninput = () => sendBtn.disabled = !msgInput.value.trim();
         msgInput.onkeydown = (e) => { if (e.key === 'Enter') sendMessage(); };
         sendBtn.onclick = sendMessage;
@@ -345,15 +362,14 @@
         async function sendMessage() {
             const text = msgInput.value.trim();
             if (!text || !currentRoomId) return;
-
             msgInput.value = '';
             sendBtn.disabled = true;
-
             await addDoc(collection(db, 'rooms', currentRoomId, 'messages'), {
-                text: text,
-                senderId: currentUser.uid,
-                timestamp: serverTimestamp()
+                text: text, senderId: currentUser.uid, timestamp: serverTimestamp()
             });
+            
+            // Keep focus on input for fast mobile typing
+            msgInput.focus();
         }
 
         // --- DELETE LOGIC ---
@@ -382,6 +398,7 @@
             document.getElementById('messages').innerHTML = '';
             document.getElementById('empty-state').classList.remove('hidden');
             document.getElementById('active-chat').classList.add('hidden');
+            document.getElementById('app').classList.remove('chat-active');
         }
     </script>
 </body>
