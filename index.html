@@ -3,1016 +3,338 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sigma Community by Alok Sir</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Sigma Nebula | Next-Gen Chat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --glass-highlight: rgba(255, 255, 255, 0.12);
-            --text-primary: #f0f2f5;
-            --text-secondary: #94a3b8;
-            --accent-start: #8b5cf6;
-            --accent-end: #ec4899;
-            --accent-cyan: #06b6d4;
-            --msg-own-start: #7c3aed;
-            --msg-own-end: #db2777;
-            --msg-other: rgba(15, 23, 42, 0.7);
-            --danger: #f43f5e;
-            --success: #10b981;
-            --radius-sm: 12px;
-            --radius-md: 16px;
-            --radius-lg: 24px;
-            --radius-xl: 32px;
+            --glass-bg: rgba(20, 25, 35, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-hover: rgba(255, 255, 255, 0.15);
+            --text-main: #ffffff;
+            --text-muted: #a0aab5;
+            --gradient-primary: linear-gradient(135deg, #FF007A, #7928CA);
+            --gradient-secondary: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            --danger: #ff4757;
         }
 
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-            -webkit-tap-highlight-color: transparent; 
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
 
-        html, body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            height: 100vh;
+        body {
+            background-color: #0f0c29;
+            /* Animated Mesh Gradient Background */
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(121, 40, 202, 0.4), transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(0, 210, 255, 0.3), transparent 50%),
+                radial-gradient(circle at 50% 80%, rgba(255, 0, 122, 0.3), transparent 50%);
+            background-size: 150% 150%;
+            animation: gradientMove 15s ease infinite;
+            color: var(--text-main);
             height: 100dvh;
-            overflow: hidden;
-            width: 100%;
-            background: #020617;
-            color: var(--text-primary);
-        }
-
-        /* ===== ANIMATED MESH BACKGROUND ===== */
-        .mesh-bg {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            background: 
-                radial-gradient(ellipse at 20% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(236, 72, 153, 0.12) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(6, 182, 212, 0.08) 0%, transparent 60%),
-                linear-gradient(180deg, #020617 0%, #0f172a 50%, #1e1b4b 100%);
-            animation: meshShift 20s ease-in-out infinite;
-        }
-
-        @keyframes meshShift {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.8; }
-        }
-
-        .orb {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(80px);
-            z-index: 0;
-            pointer-events: none;
-            animation: orbFloat 15s ease-in-out infinite;
-        }
-
-        .orb-1 {
-            width: 400px;
-            height: 400px;
-            background: rgba(139, 92, 246, 0.2);
-            top: -100px;
-            left: -100px;
-            animation-delay: 0s;
-        }
-
-        .orb-2 {
-            width: 300px;
-            height: 300px;
-            background: rgba(236, 72, 153, 0.15);
-            bottom: -50px;
-            right: -50px;
-            animation-delay: -5s;
-        }
-
-        .orb-3 {
-            width: 250px;
-            height: 250px;
-            background: rgba(6, 182, 212, 0.12);
-            top: 50%;
-            left: 50%;
-            animation-delay: -10s;
-        }
-
-        @keyframes orbFloat {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(30px, -30px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.95); }
-        }
-
-        /* ===== AUTH SCREEN ===== */
-        #auth-screen {
-            position: fixed;
-            inset: 0;
-            z-index: 100;
+            width: 100vw;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
-        }
-
-        .auth-card {
-            position: relative;
-            background: var(--glass-bg);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
-            border: 1px solid var(--glass-border);
-            padding: 48px 36px;
-            border-radius: var(--radius-xl);
-            width: 100%;
-            max-width: 420px;
-            text-align: center;
-            box-shadow: 
-                0 25px 50px -12px rgba(0, 0, 0, 0.5),
-                inset 0 1px 1px var(--glass-highlight);
-            animation: cardEnter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
             overflow: hidden;
         }
 
-        .auth-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent-start), var(--accent-end), var(--accent-cyan));
-            background-size: 200% 100%;
-            animation: gradientShift 3s ease infinite;
-        }
-
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        @keyframes cardEnter {
-            from { opacity: 0; transform: translateY(40px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+        /* --- GLASSMORPHISM UTILITIES --- */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
         }
 
-        .auth-logo {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 24px;
-            position: relative;
+        /* --- AUTH SCREEN --- */
+        #auth-screen {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            width: 100%; height: 100%; position: absolute; z-index: 100;
         }
-
-        .auth-logo-ring {
-            position: absolute;
-            inset: 0;
-            border-radius: 50%;
-            border: 2px solid transparent;
-            background: linear-gradient(var(--accent-start), var(--accent-end)) border-box;
-            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-            mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            animation: ringSpin 8s linear infinite;
+        .auth-card {
+            padding: 50px 40px; border-radius: 24px; text-align: center; width: 90%; max-width: 400px;
+            animation: popIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
-
-        @keyframes ringSpin {
-            to { transform: rotate(360deg); }
+        @keyframes popIn {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
         }
-
-        .auth-logo-inner {
-            position: absolute;
-            inset: 8px;
-            background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 30px rgba(139, 92, 246, 0.4);
-        }
-
-        .auth-logo svg { width: 36px; height: 36px; color: white; }
-
-        .auth-title {
-            font-size: 28px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #fff 0%, #c4b5fd 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 4px;
-            letter-spacing: -0.5px;
-        }
-
-        .auth-subtitle {
-            color: var(--text-secondary);
-            font-size: 16px;
-            font-weight: 500;
-            margin-bottom: 8px;
-        }
-
-        .auth-tagline {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 16px;
-            background: rgba(139, 92, 246, 0.1);
-            border: 1px solid rgba(139, 92, 246, 0.2);
-            border-radius: 100px;
-            font-size: 12px;
-            color: #c4b5fd;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            margin-bottom: 32px;
-        }
-
-        .auth-tagline::before {
-            content: '';
-            width: 6px;
-            height: 6px;
-            background: var(--success);
-            border-radius: 50%;
-            box-shadow: 0 0 8px var(--success);
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.6; transform: scale(0.8); }
+        
+        .brand-text {
+            font-size: 28px; font-weight: 700; margin-bottom: 5px;
+            background: var(--gradient-secondary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
         .google-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-            color: var(--text-primary);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-md);
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%;
+            padding: 16px; background: rgba(255, 255, 255, 0.05); color: white; border: 1px solid var(--glass-border);
+            border-radius: 16px; font-size: 15px; font-weight: 500; cursor: pointer; margin-top: 40px;
+            transition: 0.3s; backdrop-filter: blur(10px);
+        }
+        .google-btn:hover { background: rgba(255, 255, 255, 0.15); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+
+        /* --- MAIN APP CONTAINER --- */
+        #app { 
+            display: none; 
+            width: 95vw; height: 90dvh; max-width: 1400px;
+            border-radius: 30px; flex-direction: row; position: relative; overflow: hidden;
+        }
+        #app.active { display: flex; animation: fadeUp 0.6s ease; }
+        
+        @keyframes fadeUp {
+            0% { transform: translateY(20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
         }
 
-        .google-btn::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(139,92,246,0.2), rgba(236,72,153,0.2));
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .google-btn:hover {
-            border-color: rgba(139, 92, 246, 0.4);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 40px -10px rgba(139, 92, 246, 0.3);
-        }
-
-        .google-btn:hover::before { opacity: 1; }
-        .google-btn:active { transform: translateY(0); }
-
-        .google-btn span { position: relative; z-index: 1; }
-
-        #auth-error {
-            color: var(--danger);
-            font-size: 13px;
-            margin-top: 16px;
-            min-height: 20px;
-            font-weight: 500;
-        }
-
-        .sponsor-footer {
-            margin-top: 32px;
-            padding-top: 24px;
-            border-top: 1px solid var(--glass-border);
-        }
-
-        .sponsor-footer p {
-            color: var(--text-secondary);
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            font-weight: 700;
-        }
-
-        /* ===== MAIN APP ===== */
-        #app {
-            display: none;
-            height: 100vh;
-            height: 100dvh;
-            flex-direction: row;
-            position: relative;
-            z-index: 1;
-        }
-
-        #app.active { display: flex; }
-
-        /* Sidebar */
+        /* --- SIDEBAR --- */
         .sidebar {
-            width: 340px;
-            min-width: 280px;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-right: 1px solid var(--glass-border);
-            display: flex;
-            flex-direction: column;
-            flex-shrink: 0;
-            height: 100%;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            width: 350px; border-right: 1px solid var(--glass-border);
+            display: flex; flex-direction: column; flex-shrink: 0; position: relative; z-index: 2;
+            background: rgba(10, 14, 23, 0.5); /* Slightly darker glass for sidebar */
         }
-
         .sidebar-header {
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--glass-border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            min-height: 72px;
-            background: rgba(2, 6, 23, 0.4);
+            padding: 24px; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: space-between;
         }
+        .my-profile { display: flex; align-items: center; gap: 12px; }
+        .avatar { width: 48px; height: 48px; border-radius: 16px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        
+        .header-actions { display: flex; gap: 10px; }
+        .icon-btn {
+            background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border); color: var(--text-main);
+            width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.2s;
+        }
+        .icon-btn:hover { background: var(--glass-hover); }
+        .icon-btn.danger { color: var(--danger); }
+        .icon-btn.danger:hover { background: rgba(255, 71, 87, 0.2); border-color: rgba(255, 71, 87, 0.5); }
 
-        .my-profile { 
-            display: flex; 
-            align-items: center; 
-            gap: 12px; 
-        }
-
-        .avatar {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--glass-border);
-            box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
-            flex-shrink: 0;
-            transition: all 0.3s;
-        }
-
-        .avatar:hover {
-            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.4);
-            transform: scale(1.05);
-        }
-
-        .logout-btn {
-            background: rgba(244, 63, 94, 0.1);
-            border: 1px solid rgba(244, 63, 94, 0.2);
-            color: var(--danger);
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 12px;
-            padding: 8px 16px;
-            border-radius: var(--radius-sm);
-            transition: all 0.3s;
-            letter-spacing: 0.5px;
-        }
-
-        .logout-btn:hover {
-            background: var(--danger);
-            color: white;
-            box-shadow: 0 4px 20px rgba(244, 63, 94, 0.3);
-            transform: translateY(-1px);
-        }
-
-        .section-title {
-            padding: 14px 20px 10px;
-            font-size: 10px;
-            color: var(--accent-cyan);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 700;
-            background: rgba(6, 182, 212, 0.05);
-        }
-
-        .chat-list {
-            flex: 1;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            padding: 8px;
-        }
+        .chat-list { flex: 1; overflow-y: auto; padding: 10px; }
+        .chat-list::-webkit-scrollbar { width: 4px; }
+        .chat-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
 
         .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 12px 16px;
-            cursor: pointer;
-            border-radius: var(--radius-md);
-            margin: 4px 8px;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            border: 1px solid transparent;
-            min-height: 68px;
-            position: relative;
-            overflow: hidden;
+            display: flex; align-items: center; gap: 15px; padding: 12px 16px; margin-bottom: 8px;
+            cursor: pointer; border-radius: 16px; transition: 0.3s; border: 1px solid transparent;
         }
+        .contact-item:hover { background: var(--glass-hover); border: 1px solid var(--glass-border); }
+        .contact-item.active { background: var(--gradient-secondary); box-shadow: 0 8px 20px rgba(0, 210, 255, 0.2); border: none; }
 
-        .contact-item::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 3px;
-            height: 0;
-            background: linear-gradient(180deg, var(--accent-start), var(--accent-end));
-            border-radius: 0 4px 4px 0;
-            transition: height 0.3s;
+        /* --- CHAT AREA --- */
+        .chat-area { 
+            flex: 1; display: flex; flex-direction: column; position: relative; height: 100%;
         }
-
-        .contact-item:hover {
-            background: rgba(255, 255, 255, 0.04);
-            border-color: var(--glass-border);
-            transform: translateX(4px);
-        }
-
-        .contact-item:hover::before { height: 60%; }
-
-        .contact-item.active {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(236, 72, 153, 0.1));
-            border-color: rgba(139, 92, 246, 0.3);
-            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.1);
-        }
-
-        .contact-item.active::before { height: 80%; }
-
-        .contact-name {
-            font-weight: 600;
-            font-size: 15px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            color: var(--text-primary);
-        }
-
-        .contact-email {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-top: 3px;
-            font-weight: 400;
-        }
-
-        .online-indicator {
-            width: 10px;
-            height: 10px;
-            background: var(--success);
-            border-radius: 50%;
-            border: 2px solid #0f172a;
-            position: absolute;
-            bottom: 2px;
-            right: 2px;
-            box-shadow: 0 0 8px var(--success);
-        }
-
-        .avatar-wrap { position: relative; flex-shrink: 0; }
-
-        /* Chat Area */
-        .chat-area {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            height: 100%;
-            width: 100%;
-        }
-
+        
         .chat-header {
-            padding: 14px 24px;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--glass-border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            min-height: 72px;
-            flex-shrink: 0;
+            padding: 20px 30px; border-bottom: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.02);
+            display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; backdrop-filter: blur(10px);
         }
-
-        .chat-header-info {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            flex: 1;
-            min-width: 0;
+        .chat-header-info { display: flex; align-items: center; gap: 15px; }
+        .back-btn { display: none; background: none; border: none; color: var(--text-main); font-size: 24px; cursor: pointer; padding-right: 10px; }
+        
+        .clear-chat-btn {
+            background: rgba(255, 71, 87, 0.1); color: var(--danger); border: 1px solid rgba(255, 71, 87, 0.3);
+            padding: 8px 16px; border-radius: 12px; cursor: pointer; font-size: 13px; font-weight: 500; transition: 0.2s;
         }
+        .clear-chat-btn:hover { background: var(--danger); color: white; box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4); }
 
-        .chat-header-name {
-            font-weight: 700;
-            font-size: 16px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            letter-spacing: -0.3px;
-        }
-
-        .chat-header-status {
-            font-size: 12px;
-            color: var(--success);
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .chat-header-status::before {
-            content: '';
-            width: 6px;
-            height: 6px;
-            background: var(--success);
-            border-radius: 50%;
-            box-shadow: 0 0 6px var(--success);
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        .back-btn {
-            display: none;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            color: var(--text-primary);
-            font-size: 18px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-right: 4px;
-        }
-
-        .back-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateX(-2px);
-        }
-
-        .delete-chat-btn {
-            background: rgba(244, 63, 94, 0.08);
-            color: var(--danger);
-            border: 1px solid rgba(244, 63, 94, 0.2);
-            padding: 8px 16px;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 600;
-            transition: all 0.3s;
-            flex-shrink: 0;
-            white-space: nowrap;
-            letter-spacing: 0.5px;
-        }
-
-        .delete-chat-btn:hover {
-            background: var(--danger);
-            color: white;
-            box-shadow: 0 4px 20px rgba(244, 63, 94, 0.3);
-            transform: translateY(-1px);
-        }
-
+        /* --- MESSAGES --- */
         .messages-container {
-            flex: 1;
-            overflow-y: auto;
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            -webkit-overflow-scrolling: touch;
+            flex: 1; overflow-y: auto; padding: 30px; display: flex; flex-direction: column; gap: 16px;
         }
+        .messages-container::-webkit-scrollbar { width: 6px; }
+        .messages-container::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
 
-        .message-wrapper {
-            display: flex;
-            flex-direction: column;
-            max-width: 75%;
-            animation: msgIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-        }
+        .message-wrapper { display: flex; flex-direction: column; max-width: 75%; animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        @keyframes msgIn {
-            from { opacity: 0; transform: translateY(12px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        .message-wrapper.own { 
-            align-self: flex-end; 
-            align-items: flex-end; 
-        }
-
-        .message-wrapper.other { 
-            align-self: flex-start; 
-            align-items: flex-start; 
-        }
-
+        .message-wrapper.own { align-self: flex-end; align-items: flex-end; }
+        .message-wrapper.other { align-self: flex-start; align-items: flex-start; }
+        
         .message {
-            padding: 12px 18px;
-            border-radius: var(--radius-lg);
-            font-size: 14.5px;
-            line-height: 1.5;
-            display: flex;
-            align-items: flex-end;
-            gap: 10px;
-            word-break: break-word;
-            position: relative;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 14px 20px; border-radius: 20px; font-size: 14.5px; line-height: 1.5; 
+            display: flex; flex-direction: column; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-
-        .message-wrapper.own .message {
-            background: linear-gradient(135deg, var(--msg-own-start), var(--msg-own-end));
+        
+        /* Glass Other Message */
+        .message-wrapper.other .message { 
+            background: rgba(255, 255, 255, 0.08); border: 1px solid var(--glass-border);
+            border-bottom-left-radius: 4px; backdrop-filter: blur(10px);
+        }
+        
+        /* Vibrant Own Message */
+        .message-wrapper.own .message { 
+            background: var(--gradient-primary); border: none;
             border-bottom-right-radius: 4px;
-            color: white;
         }
-
-        .message-wrapper.other .message {
-            background: var(--msg-other);
-            border: 1px solid var(--glass-border);
-            border-bottom-left-radius: 4px;
-            backdrop-filter: blur(10px);
-        }
-
-        .msg-time {
-            font-size: 11px;
-            opacity: 0.7;
-            flex-shrink: 0;
-            margin-top: 2px;
-            font-weight: 500;
-        }
-
+        
+        .msg-time { font-size: 10px; opacity: 0.7; margin-top: 6px; align-self: flex-end; }
+        
         .del-msg-icon {
-            font-size: 11px;
-            cursor: pointer;
-            color: var(--danger);
-            opacity: 0;
-            transition: all 0.3s;
-            margin-top: 6px;
-            padding: 4px 10px;
-            border-radius: 6px;
-            background: rgba(244, 63, 94, 0.1);
-            border: 1px solid rgba(244, 63, 94, 0.15);
-            font-weight: 600;
-            letter-spacing: 0.5px;
+            font-size: 12px; cursor: pointer; color: var(--danger); opacity: 0; transition: 0.2s; margin-top: 6px;
+            background: rgba(255, 71, 87, 0.1); padding: 4px 10px; border-radius: 8px;
         }
-
-        .del-msg-icon:hover {
-            background: rgba(244, 63, 94, 0.2);
-            transform: scale(1.05);
-        }
-
         .message-wrapper.own:hover .del-msg-icon { opacity: 1; }
 
+        /* --- INPUT AREA --- */
         .input-area {
-            padding: 16px 24px;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            flex-shrink: 0;
-            border-top: 1px solid var(--glass-border);
+            padding: 20px 30px; background: transparent; display: flex; gap: 15px; align-items: center; flex-shrink: 0;
+            padding-bottom: max(20px, env(safe-area-inset-bottom));
         }
-
-        .input-area input {
-            flex: 1;
-            padding: 14px 22px;
-            border-radius: 100px;
-            border: 1px solid var(--glass-border);
-            background: rgba(2, 6, 23, 0.6);
-            color: var(--text-primary);
-            font-size: 15px;
-            outline: none;
-            min-width: 0;
-            font-family: inherit;
-            transition: all 0.3s;
+        .floating-input-wrapper {
+            flex: 1; display: flex; align-items: center; background: rgba(255, 255, 255, 0.07);
+            border: 1px solid var(--glass-border); border-radius: 30px; padding: 6px 6px 6px 20px;
+            backdrop-filter: blur(15px); box-shadow: 0 8px 25px rgba(0,0,0,0.2);
         }
-
-        .input-area input::placeholder { 
-            color: #475569; 
+        .floating-input-wrapper input {
+            flex: 1; border: none; background: transparent; color: white; font-size: 15px; outline: none;
         }
-
-        .input-area input:focus {
-            border-color: rgba(139, 92, 246, 0.4);
-            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
-        }
-
+        .floating-input-wrapper input::placeholder { color: var(--text-muted); }
+        
         .send-btn {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            border: none;
-            background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
-            color: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            transition: all 0.3s;
-            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
-            position: relative;
-            overflow: hidden;
+            width: 44px; height: 44px; border-radius: 50%; border: none; background: var(--text-main); color: #000;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: 0.3s;
         }
-
-        .send-btn::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, var(--accent-end), var(--accent-start));
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .send-btn:hover {
-            transform: scale(1.08) rotate(-5deg);
-            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.4);
-        }
-
-        .send-btn:hover::before { opacity: 1; }
-        .send-btn:active { transform: scale(0.95); }
-        .send-btn:disabled { 
-            opacity: 0.3; 
-            cursor: not-allowed; 
-            transform: none; 
-            box-shadow: none; 
-        }
-
-        .send-btn svg { position: relative; z-index: 1; }
-
+        .send-btn:hover:not(:disabled) { transform: scale(1.05); box-shadow: 0 0 15px rgba(255,255,255,0.5); }
+        .send-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+        
         .empty-state {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-secondary);
-            text-align: center;
-            flex-direction: column;
-            padding: 40px;
-            animation: fadeIn 1s ease;
+            flex: 1; display: flex; align-items: center; justify-content: center; color: var(--text-muted); 
+            text-align: center; flex-direction: column; padding: 20px;
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .empty-state-icon {
-            font-size: 64px;
-            margin-bottom: 24px;
-            filter: drop-shadow(0 0 30px rgba(139, 92, 246, 0.3));
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .empty-state h3 {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 6px;
-            background: linear-gradient(135deg, #fff, #c4b5fd);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .empty-state p {
-            color: var(--text-secondary);
-            font-size: 15px;
-            margin-bottom: 8px;
-        }
-
-        .empty-state .sponsor-tag {
-            margin-top: 32px;
-            padding: 10px 24px;
-            background: rgba(139, 92, 246, 0.08);
-            border: 1px solid rgba(139, 92, 246, 0.15);
-            border-radius: 100px;
-            font-size: 11px;
-            color: #c4b5fd;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
+        
+        .glow-icon {
+            width: 80px; height: 80px; background: var(--gradient-secondary); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; margin-bottom: 20px;
+            box-shadow: 0 0 30px rgba(0, 210, 255, 0.4); color: white;
         }
 
         .hidden { display: none !important; }
 
-        /* ===== MOBILE RESPONSIVE ===== */
+        /* =========================================
+           📱 MOBILE RESPONSIVE FIX (EDGE-TO-EDGE)
+           ========================================= */
         @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                position: absolute;
-                left: 0;
-                top: 0;
-                bottom: 0;
-                z-index: 10;
-                transform: translateX(0);
-            }
-
-            .sidebar.hidden-mobile {
-                transform: translateX(-100%);
-            }
-
+            #app { width: 100vw; height: 100dvh; border-radius: 0; border: none; }
+            .sidebar { width: 100%; border-right: none; }
+            
             .chat-area {
-                width: 100%;
-                position: absolute;
-                left: 0;
-                top: 0;
-                bottom: 0;
-                z-index: 5;
-                transform: translateX(100%);
-                transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10;
+                transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+                background: rgba(15, 12, 41, 0.95); backdrop-filter: blur(30px);
             }
-
-            .chat-area.chat-visible {
-                transform: translateX(0);
-            }
-
-            .back-btn { display: flex; }
-
+            
+            #app.chat-active .chat-area { transform: translateX(0); }
+            .back-btn { display: block; }
             .empty-state { display: none !important; }
-
-            .message-wrapper { max-width: 85%; }
-
-            .auth-card { padding: 36px 24px; }
-
-            .messages-container { padding: 16px; }
-            .input-area { padding: 12px 16px; }
-            .chat-header { padding: 12px 16px; }
-        }
-
-        @media (min-width: 769px) {
-            .sidebar {
-                position: relative;
-                transform: none !important;
-            }
-            .chat-area {
-                position: relative;
-                transform: none !important;
-            }
-        }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { 
-            background: linear-gradient(180deg, var(--accent-start), var(--accent-end)); 
-            border-radius: 10px; 
-        }
-        ::-webkit-scrollbar-thumb:hover { 
-            background: linear-gradient(180deg, var(--accent-end), var(--accent-start)); 
-        }
-
-        /* Stagger animation for contact items */
-        .contact-item { animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both; }
-        .contact-item:nth-child(1) { animation-delay: 0.05s; }
-        .contact-item:nth-child(2) { animation-delay: 0.1s; }
-        .contact-item:nth-child(3) { animation-delay: 0.15s; }
-        .contact-item:nth-child(4) { animation-delay: 0.2s; }
-        .contact-item:nth-child(5) { animation-delay: 0.25s; }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        /* Typing indicator style */
-        .typing-indicator {
-            display: flex;
-            gap: 4px;
-            padding: 4px 0;
-        }
-
-        .typing-indicator span {
-            width: 6px;
-            height: 6px;
-            background: var(--text-secondary);
-            border-radius: 50%;
-            animation: typingBounce 1.4s ease-in-out infinite both;
-        }
-
-        .typing-indicator span:nth-child(1) { animation-delay: 0s; }
-        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes typingBounce {
-            0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; }
-            40% { transform: scale(1); opacity: 1; }
+            .message-wrapper { max-width: 90%; }
+            .input-area { padding: 15px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Animated Background -->
-    <div class="mesh-bg"></div>
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
-
-    <!-- AUTH SCREEN -->
+    <!-- AUTHENTICATION SCREEN -->
     <div id="auth-screen">
-        <div class="auth-card">
-            <div class="auth-logo">
-                <div class="auth-logo-ring"></div>
-                <div class="auth-logo-inner">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 2L2 7l10 5 10-5-10-5z"/>
-                        <polyline points="2 17 12 22 22 17"/>
-                        <polyline points="2 12 12 17 22 12"/>
-                    </svg>
-                </div>
-            </div>
-            <h1 class="auth-title">Sigma Community</h1>
-            <p class="auth-subtitle">by Alok Sir</p>
-            <div class="auth-tagline">Connect & Learn</div>
-
+        <div class="auth-card glass-panel">
+            <h1 class="brand-text">Sigma Nebula</h1>
+            <p style="color: var(--text-muted); font-size: 14px; font-weight: 300;">by Alok Sir</p>
+            
             <button class="google-btn" id="login-btn">
-                <svg width="20" height="20" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-                <span>Sign in with Google</span>
+                <svg width="22" height="22" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                Continue with Google
             </button>
-            <p id="auth-error"></p>
-
-            <div class="sponsor-footer">
-                <p>Sponsored by Sigma Coaching Classes</p>
-            </div>
+            
+            <p id="auth-error" style="color: var(--danger); font-size: 13px; margin-top: 15px; display: none;"></p>
         </div>
     </div>
 
-    <!-- MAIN APP -->
-    <div id="app">
-
-        <!-- SIDEBAR -->
-        <div class="sidebar" id="sidebar">
+    <!-- MAIN APPLICATION -->
+    <div id="app" class="glass-panel">
+        
+        <!-- Sidebar -->
+        <div class="sidebar">
             <div class="sidebar-header">
                 <div class="my-profile">
-                    <div class="avatar-wrap">
-                        <img src="" id="my-avatar" class="avatar" alt="Me">
-                        <div class="online-indicator"></div>
-                    </div>
-                    <div style="min-width: 0;">
-                        <div id="my-name" style="font-weight: 700; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></div>
-                        <div style="font-size: 12px; color: var(--success); font-weight: 500; display: flex; align-items: center; gap: 4px;">
-                            <span style="width: 6px; height: 6px; background: var(--success); border-radius: 50%; box-shadow: 0 0 6px var(--success);"></span>
-                            Online
-                        </div>
+                    <img src="" id="my-avatar" class="avatar">
+                    <div>
+                        <div id="my-name" style="font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px;"></div>
+                        <div style="font-size: 11px; color: #00d2ff;">Connected</div>
                     </div>
                 </div>
-                <button class="logout-btn" id="logout-btn">Log Out</button>
+                <div class="header-actions">
+                    <!-- Delete Account Button -->
+                    <button class="icon-btn danger" id="delete-account-btn" title="Delete Account & Hide Profile">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg>
+                    </button>
+                    <!-- Logout Button -->
+                    <button class="icon-btn" id="logout-btn" title="Log Out">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"></path></svg>
+                    </button>
+                </div>
             </div>
-
-            <div class="section-title">Available Users</div>
-            <div class="chat-list" id="contact-list"></div>
+            
+            <div class="chat-list" id="contact-list">
+                <!-- Users will populate here -->
+            </div>
         </div>
 
-        <!-- CHAT AREA -->
-        <div class="chat-area" id="chat-area">
-
-            <!-- Empty State -->
+        <!-- Chat Area -->
+        <div class="chat-area">
+            
+            <!-- Default Empty State -->
             <div class="empty-state" id="empty-state">
-                <div class="empty-state-icon">💬</div>
-                <h3>Welcome to Sigma Community</h3>
-                <p>by Alok Sir</p>
-                <p style="margin-top: 8px; font-size: 13px; max-width: 300px; line-height: 1.5;">Select a user from the sidebar to start a conversation. Your messages are secure and real-time.</p>
-                <div class="sponsor-tag">Sponsored by Sigma Coaching Classes</div>
+                <div class="glow-icon">
+                    <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"></path></svg>
+                </div>
+                <h3 class="brand-text">Sigma Nebula</h3>
+                <p style="font-size: 14px; font-weight: 300;">Tap a contact to initialize secure link.</p>
+                <p style="margin-top: 30px; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.3);">Sponsored by Sigma Coaching Classes</p>
             </div>
 
-            <!-- Active Chat -->
+            <!-- Active Chat State -->
             <div id="active-chat" class="hidden" style="display: flex; flex-direction: column; height: 100%;">
-
+                
+                <!-- Chat Header -->
                 <div class="chat-header">
                     <div class="chat-header-info">
-                        <button class="back-btn" id="back-btn">←</button>
-                        <div class="avatar-wrap">
-                            <img src="" id="chat-avatar" class="avatar" alt="">
-                            <div class="online-indicator"></div>
-                        </div>
-                        <div style="min-width: 0;">
-                            <div class="chat-header-name" id="chat-name"></div>
-                            <div class="chat-header-status">online</div>
-                        </div>
+                        <button class="back-btn" id="back-btn">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"></path></svg>
+                        </button>
+                        <img src="" id="chat-avatar" class="avatar">
+                        <span id="chat-name" style="font-weight: 600; font-size: 16px;"></span>
                     </div>
-                    <button class="delete-chat-btn" id="clear-chat-btn">Clear Chat</button>
+                    <button class="clear-chat-btn" id="clear-chat-btn">Erase Chat</button>
                 </div>
 
-                <div class="messages-container" id="messages"></div>
+                <!-- Messages -->
+                <div class="messages-container" id="messages">
+                    <!-- Messages will populate here -->
+                </div>
 
+                <!-- Input -->
                 <div class="input-area">
-                    <input type="text" id="msg-input" placeholder="Type a message..." autocomplete="off">
-                    <button class="send-btn" id="send-btn" disabled>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                    </button>
+                    <div class="floating-input-wrapper">
+                        <input type="text" id="msg-input" placeholder="Transmit message..." autocomplete="off">
+                        <button class="send-btn" id="send-btn" disabled>
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path></svg>
+                        </button>
+                    </div>
                 </div>
 
             </div>
         </div>
     </div>
 
+    <!-- FIREBASE MODULES & LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, deleteUser } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
         import { getFirestore, collection, doc, setDoc, addDoc, deleteDoc, getDocs, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -1034,29 +356,46 @@
         let unsubUsers = null;
         let unsubMessages = null;
 
-        const isMobile = () => window.innerWidth <= 768;
-
-        // --- AUTHENTICATION ---
+        // --- AUTHENTICATION FLOW ---
         document.getElementById('login-btn').onclick = async () => {
             try {
                 await signInWithPopup(auth, provider);
             } catch (err) {
                 const errEl = document.getElementById('auth-error');
                 errEl.textContent = err.message;
+                errEl.style.display = 'block';
             }
         };
 
         document.getElementById('logout-btn').onclick = () => signOut(auth);
+
+        // --- DELETE ACCOUNT FLOW ---
+        document.getElementById('delete-account-btn').onclick = async () => {
+            if(confirm("CRITICAL: Do you want to delete your profile? Your name will disappear from everyone's contact list permanently.")) {
+                try {
+                    // Remove from public Firestore list
+                    await deleteDoc(doc(db, 'users', currentUser.uid));
+                    // Attempt to delete Auth account (might require recent login)
+                    await deleteUser(currentUser);
+                } catch(e) {
+                    console.log(e);
+                    // Even if Firebase Auth delete fails, the Firestore delete succeeded.
+                    // The user is hidden from the app. Sign them out manually.
+                    await signOut(auth);
+                }
+            }
+        };
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
                 document.getElementById('auth-screen').style.display = 'none';
                 document.getElementById('app').classList.add('active');
-
+                
                 document.getElementById('my-name').textContent = user.displayName;
                 document.getElementById('my-avatar').src = user.photoURL;
 
+                // Add to public contact list
                 await setDoc(doc(db, 'users', user.uid), {
                     uid: user.uid,
                     name: user.displayName,
@@ -1074,29 +413,27 @@
             }
         });
 
-        // --- LOAD USERS ---
+        // --- LOAD USERS (SIDEBAR) ---
         function loadUsers() {
             if(unsubUsers) unsubUsers();
             unsubUsers = onSnapshot(collection(db, 'users'), (snapshot) => {
                 const list = document.getElementById('contact-list');
-                list.innerHTML = '';
+                list.innerHTML = ''; 
                 snapshot.forEach((docSnap) => {
                     const user = docSnap.data();
-                    if (user.uid === currentUser.uid) return;
+                    if (user.uid === currentUser.uid) return; 
 
                     const div = document.createElement('div');
-                    div.className = 'contact-item';
+                    div.className = 'contact-item glass-panel';
+                    div.style.background = "transparent";
                     div.innerHTML = `
-                        <div class="avatar-wrap">
-                            <img src="${user.photo}" class="avatar" alt="${user.name}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=7c3aed&color=fff'">
-                            <div class="online-indicator"></div>
-                        </div>
-                        <div style="min-width: 0;">
-                            <div class="contact-name">${user.name}</div>
-                            <div class="contact-email">${user.email}</div>
+                        <img src="${user.photo}" class="avatar">
+                        <div>
+                            <div style="font-weight: 500; font-size: 14px;">${user.name}</div>
+                            <div style="font-size: 11px; color: var(--text-muted);">Available</div>
                         </div>
                     `;
-
+                    
                     div.onclick = () => {
                         document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active'));
                         div.classList.add('active');
@@ -1107,7 +444,7 @@
             });
         }
 
-        // --- OPEN CHAT ---
+        // --- OPEN CHAT ROOM ---
         function openChat(targetUser) {
             const ids = [currentUser.uid, targetUser.uid].sort();
             currentRoomId = `${ids[0]}_${ids[1]}`;
@@ -1116,23 +453,20 @@
             document.getElementById('active-chat').classList.remove('hidden');
             document.getElementById('chat-name').textContent = targetUser.name;
             document.getElementById('chat-avatar').src = targetUser.photo;
-
-            if (isMobile()) {
-                document.getElementById('sidebar').classList.add('hidden-mobile');
-                document.getElementById('chat-area').classList.add('chat-visible');
-            }
+            
+            // Trigger Mobile Animation
+            document.getElementById('app').classList.add('chat-active');
 
             loadMessages(currentRoomId);
         }
 
-        // --- BACK BUTTON (Mobile) ---
+        // --- MOBILE BACK BUTTON ---
         document.getElementById('back-btn').onclick = () => {
-            document.getElementById('sidebar').classList.remove('hidden-mobile');
-            document.getElementById('chat-area').classList.remove('chat-visible');
+            document.getElementById('app').classList.remove('chat-active');
             document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active'));
         };
 
-        // --- LOAD MESSAGES ---
+        // --- LOAD & RENDER MESSAGES ---
         function loadMessages(roomId) {
             if (unsubMessages) unsubMessages();
             const msgRef = collection(db, 'rooms', roomId, 'messages');
@@ -1140,30 +474,29 @@
 
             unsubMessages = onSnapshot(q, (snapshot) => {
                 const container = document.getElementById('messages');
-                container.innerHTML = '';
+                container.innerHTML = ''; 
                 snapshot.forEach((docSnap) => {
                     const data = docSnap.data();
                     const isOwn = data.senderId === currentUser.uid;
-                    const time = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '';
+                    const time = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
                     const div = document.createElement('div');
                     div.className = `message-wrapper ${isOwn ? 'own' : 'other'}`;
                     div.innerHTML = `
                         <div class="message">
-                            <span>${escapeHtml(data.text)}</span>
+                            <span>${data.text}</span>
                             <span class="msg-time">${time}</span>
                         </div>
-                        ${isOwn ? `<div class="del-msg-icon" onclick="window.deleteMsg('${docSnap.id}')">Delete</div>` : ''}
+                        ${isOwn ? `<div class="del-msg-icon" onclick="window.deleteSingleMessage('${docSnap.id}')">Erase</div>` : ''}
                     `;
                     container.appendChild(div);
                 });
-                container.scrollTop = container.scrollHeight;
+                container.scrollTop = container.scrollHeight; 
             });
         }
 
         // --- SEND MESSAGES ---
         const msgInput = document.getElementById('msg-input');
         const sendBtn = document.getElementById('send-btn');
-
         msgInput.oninput = () => sendBtn.disabled = !msgInput.value.trim();
         msgInput.onkeydown = (e) => { if (e.key === 'Enter') sendMessage(); };
         sendBtn.onclick = sendMessage;
@@ -1180,19 +513,18 @@
         }
 
         // --- DELETE LOGIC ---
-        window.deleteMsg = async function(msgId) {
+        window.deleteSingleMessage = async function(messageId) {
             if (!currentRoomId) return;
-            if (confirm("Delete this message?")) {
-                await deleteDoc(doc(db, 'rooms', currentRoomId, 'messages', msgId));
-            }
+            await deleteDoc(doc(db, 'rooms', currentRoomId, 'messages', messageId));
         };
 
         document.getElementById('clear-chat-btn').onclick = async () => {
             if (!currentRoomId) return;
-            if (confirm("Delete all messages in this chat?")) {
-                const snapshot = await getDocs(query(collection(db, 'rooms', currentRoomId, 'messages')));
-                snapshot.forEach(async (d) => {
-                    await deleteDoc(doc(db, 'rooms', currentRoomId, 'messages', d.id));
+            if (confirm("Permanently erase all messages in this link?")) {
+                const msgRef = collection(db, 'rooms', currentRoomId, 'messages');
+                const snapshot = await getDocs(query(msgRef));
+                snapshot.forEach(async (docSnap) => {
+                    await deleteDoc(doc(db, 'rooms', currentRoomId, 'messages', docSnap.id));
                 });
             }
         };
@@ -1204,23 +536,8 @@
             document.getElementById('messages').innerHTML = '';
             document.getElementById('empty-state').classList.remove('hidden');
             document.getElementById('active-chat').classList.add('hidden');
-            document.getElementById('sidebar').classList.remove('hidden-mobile');
-            document.getElementById('chat-area').classList.remove('chat-visible');
+            document.getElementById('app').classList.remove('chat-active');
         }
-
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        // Handle resize
-        window.addEventListener('resize', () => {
-            if (!isMobile()) {
-                document.getElementById('sidebar').classList.remove('hidden-mobile');
-                document.getElementById('chat-area').classList.remove('chat-visible');
-            }
-        });
     </script>
 </body>
 </html>
