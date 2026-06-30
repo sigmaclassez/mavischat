@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sigma Community by Alok Sir</title>
     <style>
         :root {
@@ -18,18 +18,24 @@
             --msg-own: #2b5278;
             --msg-other: #182533;
             --danger: #e74c3c;
-            --radius: 12px;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: var(--bg); color: var(--text); height: 100vh; overflow: hidden;
+            background: var(--bg); 
+            color: var(--text); 
+            /* 100dvh prevents mobile keyboard from covering the input box */
+            height: 100dvh; 
+            width: 100vw;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
         /* --- AUTH SCREEN --- */
         #auth-screen {
-            display: flex; align-items: center; justify-content: center; height: 100vh;
+            display: flex; align-items: center; justify-content: center; height: 100%;
             background: linear-gradient(135deg, #1a2a3a 0%, #0e1e2e 100%);
         }
         .auth-card {
@@ -44,19 +50,26 @@
         .google-btn:hover { background: #f1f1f1; transform: translateY(-2px); }
 
         /* --- MAIN APP --- */
-        #app { display: none; height: 100vh; flex-direction: row; position: relative; }
+        #app { 
+            display: none; 
+            height: 100%; 
+            width: 100%;
+            flex-direction: row; 
+            position: relative; 
+            overflow: hidden;
+        }
         #app.active { display: flex; }
         
         /* Sidebar */
         .sidebar {
             width: 320px; background: var(--surface); border-right: 1px solid var(--border);
-            display: flex; flex-direction: column; flex-shrink: 0; transition: 0.3s;
+            display: flex; flex-direction: column; flex-shrink: 0; height: 100%;
         }
         .sidebar-header {
             padding: 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between;
         }
         .my-profile { display: flex; align-items: center; gap: 10px; }
-        .avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: var(--border); }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: var(--border); flex-shrink: 0; }
         .logout-btn { background: none; border: none; color: var(--danger); cursor: pointer; font-weight: 600; }
         
         .chat-list { flex: 1; overflow-y: auto; }
@@ -67,18 +80,19 @@
         .contact-item.active { background: var(--accent); }
 
         /* Chat Area */
-        .chat-area { flex: 1; display: flex; flex-direction: column; background: var(--bg); position: relative; }
+        .chat-area { 
+            flex: 1; display: flex; flex-direction: column; background: var(--bg); position: relative; height: 100%;
+        }
         
         .chat-header {
             padding: 12px 20px; background: var(--surface); border-bottom: 1px solid var(--border);
-            display: flex; align-items: center; justify-content: space-between; min-height: 65px;
+            display: flex; align-items: center; justify-content: space-between; min-height: 65px; flex-shrink: 0;
         }
         .chat-header-info { display: flex; align-items: center; gap: 12px; }
         
-        /* Back Button (Hidden on Desktop) */
         .back-btn {
             display: none; background: none; border: none; color: var(--text-secondary);
-            font-size: 24px; margin-right: 4px; cursor: pointer;
+            font-size: 26px; margin-right: 4px; cursor: pointer; padding: 0 10px 0 0;
         }
         .back-btn:hover { color: var(--text); }
 
@@ -108,7 +122,8 @@
         .message-wrapper.own:hover .del-msg-icon { opacity: 1; }
 
         .input-area {
-            padding: 12px 16px; background: var(--surface); display: flex; gap: 10px; align-items: center; padding-bottom: max(12px, env(safe-area-inset-bottom));
+            padding: 12px 16px; background: var(--surface); display: flex; gap: 10px; align-items: center; flex-shrink: 0;
+            padding-bottom: max(12px, env(safe-area-inset-bottom));
         }
         .input-area input {
             flex: 1; padding: 12px 16px; border-radius: 24px; border: none; background: var(--bg); color: white; font-size: 15px; outline: none;
@@ -124,14 +139,32 @@
         .hidden { display: none !important; }
 
         /* =========================================
-           📱 MOBILE RESPONSIVE MEDIA QUERIES 
+           📱 MOBILE RESPONSIVE FIX (SLIDE-OVER)
            ========================================= */
         @media (max-width: 768px) {
-            .sidebar { width: 100%; }
-            .chat-area { display: none; width: 100%; }
+            .sidebar { 
+                width: 100%; 
+                border-right: none; 
+            }
+            
+            .chat-area {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 10;
+                /* Push off-screen to the right by default */
+                transform: translateX(100%);
+                transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            
+            /* When chat is active, slide it in */
+            #app.chat-active .chat-area {
+                transform: translateX(0);
+            }
+
             .back-btn { display: block; }
-            #app.chat-active .sidebar { display: none; }
-            #app.chat-active .chat-area { display: flex; }
             .empty-state { display: none !important; }
             .message-wrapper { max-width: 90%; }
         }
@@ -163,7 +196,7 @@
                 <div class="my-profile">
                     <img src="" id="my-avatar" class="avatar">
                     <div>
-                        <div id="my-name" style="font-weight: 600; font-size: 14px;"></div>
+                        <div id="my-name" style="font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;"></div>
                         <div style="font-size: 12px; color: var(--accent-light);">Online</div>
                     </div>
                 </div>
@@ -192,7 +225,7 @@
                     <div class="chat-header-info">
                         <button class="back-btn" id="back-btn">←</button>
                         <img src="" id="chat-avatar" class="avatar">
-                        <span id="chat-name" style="font-weight: 600; font-size: 16px;"></span>
+                        <span id="chat-name" style="font-weight: 600; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px;"></span>
                     </div>
                     <button class="delete-chat-btn" id="clear-chat-btn">Clear Chat</button>
                 </div>
@@ -216,7 +249,6 @@
         import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
         import { getFirestore, collection, doc, setDoc, addDoc, deleteDoc, getDocs, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
-        // Your exact Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBdz1-Y06YkgAD-Ty7AQkSRYb1dwNDAoqo",
             authDomain: "sigmachat-7b6fc.firebaseapp.com",
@@ -309,7 +341,7 @@
             document.getElementById('chat-name').textContent = targetUser.name;
             document.getElementById('chat-avatar').src = targetUser.photo;
             
-            // MOBILE: Trigger CSS class to hide sidebar and show chat
+            // Trigger Mobile Animation
             document.getElementById('app').classList.add('chat-active');
 
             loadMessages(currentRoomId);
@@ -317,10 +349,7 @@
 
         // --- MOBILE BACK BUTTON ---
         document.getElementById('back-btn').onclick = () => {
-            // Remove CSS class to show sidebar again and hide chat
             document.getElementById('app').classList.remove('chat-active');
-            
-            // Un-highlight the contact in the list
             document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active'));
         };
 
@@ -367,9 +396,6 @@
             await addDoc(collection(db, 'rooms', currentRoomId, 'messages'), {
                 text: text, senderId: currentUser.uid, timestamp: serverTimestamp()
             });
-            
-            // Keep focus on input for fast mobile typing
-            msgInput.focus();
         }
 
         // --- DELETE LOGIC ---
