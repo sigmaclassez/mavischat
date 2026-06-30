@@ -3,540 +3,386 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sigma Classes Community</title>
+    <title>Sigma Chat - Private Messenger</title>
     <style>
-        /* --- ALL YOUR ORIGINAL CSS --- */
         :root {
             --bg: #0e0e0e;
             --surface: #17212b;
             --surface-hover: #202b36;
-            --surface-light: #1e2a38;
             --border: #0e1621;
             --text: #ffffff;
             --text-secondary: #8e9ba8;
             --accent: #2b5278;
             --accent-hover: #3a6d99;
             --accent-light: #5eb5f7;
-            --message-own: #2b5278;
-            --message-other: #182533;
-            --green: #5db548;
+            --msg-own: #2b5278;
+            --msg-other: #182533;
             --danger: #e74c3c;
             --radius: 12px;
-            --radius-sm: 8px;
-            --shadow: 0 4px 20px rgba(0,0,0,0.4);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            height: 100vh;
-            overflow: hidden;
-            -webkit-font-smoothing: antialiased;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg); color: var(--text); height: 100vh; overflow: hidden;
         }
 
-        /* Auth Screen */
-        .auth-screen {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
+        /* --- AUTH SCREEN --- */
+        #auth-screen {
+            display: flex; align-items: center; justify-content: center; height: 100vh;
             background: linear-gradient(135deg, #1a2a3a 0%, #0e1e2e 100%);
-            position: relative;
-            overflow: hidden;
-        }
-        .auth-screen::before {
-            content: '';
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(43,82,120,0.15) 1px, transparent 1px);
-            background-size: 40px 40px;
-            animation: drift 25s linear infinite;
-        }
-        @keyframes drift {
-            0% { transform: translate(0,0); }
-            100% { transform: translate(-40px,-40px); }
         }
         .auth-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 48px 40px;
-            width: 100%;
-            max-width: 400px;
-            position: relative;
-            z-index: 1;
-            box-shadow: var(--shadow);
-            animation: slideUp 0.5s ease-out;
+            background: var(--surface); padding: 40px; border-radius: 16px; width: 100%; max-width: 380px;
+            text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+        .google-btn {
+            display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%;
+            padding: 14px; background: white; color: #333; border: none; border-radius: 8px;
+            font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 30px; transition: 0.2s;
         }
-        .auth-logo {
-            width: 72px;
-            height: 72px;
-            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 24px;
-            box-shadow: 0 8px 32px rgba(43,82,120,0.4);
-        }
-        .auth-logo svg { width: 36px; height: 36px; color: white; }
-        .auth-title { font-size: 26px; font-weight: 700; text-align: center; margin-bottom: 8px; }
-        .auth-subtitle { font-size: 14px; color: var(--text-secondary); text-align: center; margin-bottom: 32px; }
-        .form-group { margin-bottom: 20px; }
-        .form-label { display: block; font-size: 13px; font-weight: 500; color: var(--text-secondary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .form-input {
-            width: 100%;
-            padding: 12px 16px;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            color: var(--text);
-            font-size: 15px;
-            font-family: inherit;
-            transition: all 0.2s;
-            outline: none;
-        }
-        .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(43,82,120,0.2); }
-        .auth-btn {
-            width: 100%;
-            padding: 14px;
-            background: var(--accent);
-            border: none;
-            border-radius: var(--radius-sm);
-            color: white;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-top: 8px;
-        }
-        .auth-btn:hover { background: var(--accent-hover); }
-        .auth-btn:disabled { opacity: 0.5; cursor: wait; }
-        .auth-toggle { text-align: center; margin-top: 20px; font-size: 14px; color: var(--text-secondary); }
-        .auth-toggle span { color: var(--accent-light); cursor: pointer; font-weight: 500; }
-        .auth-error {
-            background: rgba(231,76,60,0.1); border: 1px solid rgba(231,76,60,0.3); color: var(--danger);
-            padding: 10px 14px; border-radius: var(--radius-sm); font-size: 13px; margin-bottom: 16px;
-            display: none;
-        }
-        .auth-error.visible { display: block; }
+        .google-btn:hover { background: #f1f1f1; transform: translateY(-2px); }
 
-        /* App Layout */
-        .app { display: none; height: 100vh; }
-        .app.active { display: flex; }
+        /* --- MAIN APP --- */
+        #app { display: none; height: 100vh; flex-direction: row; }
+        #app.active { display: flex; }
+        
+        /* Sidebar */
         .sidebar {
-            width: 380px; min-width: 280px; max-width: 420px;
-            border-right: 1px solid var(--border);
-            display: flex; flex-direction: column; background: var(--surface); position: relative;
+            width: 320px; background: var(--surface); border-right: 1px solid var(--border);
+            display: flex; flex-direction: column; flex-shrink: 0;
         }
-        .chat-area {
-            flex: 1; display: flex; flex-direction: column; background: var(--bg); position: relative;
-        }
-
-        /* Sidebar Elements */
         .sidebar-header {
-            padding: 14px 16px; display: flex; align-items: center; gap: 12px;
-            border-bottom: 1px solid var(--border); background: var(--surface);
+            padding: 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between;
         }
-        .search-box { flex: 1; position: relative; }
-        .search-box input {
-            width: 100%; padding: 8px 12px 8px 32px; background: var(--bg); border: none;
-            border-radius: 20px; color: var(--text); font-size: 14px; outline: none;
-        }
-        .search-box svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: #4a5a6a; }
+        .my-profile { display: flex; align-items: center; gap: 10px; }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: var(--border); }
+        .logout-btn { background: none; border: none; color: var(--danger); cursor: pointer; font-weight: 600; }
         
-        .chat-list { flex: 1; overflow-y: auto; padding: 8px 0; }
-        .chat-item {
-            display: flex; align-items: center; gap: 12px; padding: 10px 16px;
-            cursor: pointer; transition: all 0.15s;
+        .chat-list { flex: 1; overflow-y: auto; }
+        .contact-item {
+            display: flex; align-items: center; gap: 12px; padding: 12px 16px; cursor: pointer; border-bottom: 1px solid #1a242f; transition: 0.2s;
         }
-        .chat-item:hover { background: var(--surface-hover); }
-        .chat-item.active { background: var(--accent); }
-        .chat-avatar { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; background: var(--surface-light); }
-        .chat-info { flex: 1; min-width: 0; }
-        .chat-name { font-weight: 600; font-size: 14px; color: white; }
+        .contact-item:hover { background: var(--surface-hover); }
+        .contact-item.active { background: var(--accent); }
 
-        /* Chat Header & Messages */
+        /* Chat Area */
+        .chat-area { flex: 1; display: flex; flex-direction: column; background: var(--bg); position: relative; }
+        
         .chat-header {
-            padding: 10px 20px; display: flex; align-items: center; gap: 12px;
-            border-bottom: 1px solid var(--border); background: var(--surface); min-height: 64px;
+            padding: 12px 20px; background: var(--surface); border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between; min-height: 65px;
         }
-        .chat-header-info { flex: 1; min-width: 0; }
-        .chat-header-name { font-weight: 600; font-size: 15px; margin-bottom: 2px; }
-        
-        .messages-area {
-            flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 4px;
-            background: linear-gradient(180deg, #0e1621 0%, #0e0e0e 100%);
+        .chat-header-info { display: flex; align-items: center; gap: 12px; }
+        .delete-chat-btn {
+            background: rgba(231,76,60,0.1); color: var(--danger); border: 1px solid rgba(231,76,60,0.3);
+            padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.2s;
         }
-        .message { display: flex; gap: 8px; max-width: 70%; align-self: flex-start; margin-bottom: 8px; }
-        .message.own { align-self: flex-end; flex-direction: row-reverse; }
-        .msg-bubble {
-            padding: 10px 14px; border-radius: 18px; font-size: 14px; line-height: 1.4; position: relative;
-        }
-        .message:not(.own) .msg-bubble { background: var(--message-other); border-bottom-left-radius: 4px; }
-        .message.own .msg-bubble { background: var(--message-own); border-bottom-right-radius: 4px; }
-        .msg-time { font-size: 11px; opacity: 0.7; margin-top: 4px; display: block; text-align: right; }
+        .delete-chat-btn:hover { background: var(--danger); color: white; }
 
-        /* Input Area */
+        .messages-container {
+            flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px;
+        }
+        .message-wrapper { display: flex; flex-direction: column; max-width: 70%; }
+        .message-wrapper.own { align-self: flex-end; align-items: flex-end; }
+        .message-wrapper.other { align-self: flex-start; align-items: flex-start; }
+        
+        .message {
+            padding: 10px 14px; border-radius: 16px; font-size: 14.5px; line-height: 1.4; display: flex; align-items: flex-end; gap: 8px; position: relative;
+        }
+        .message-wrapper.own .message { background: var(--msg-own); border-bottom-right-radius: 4px; }
+        .message-wrapper.other .message { background: var(--msg-other); border-bottom-left-radius: 4px; }
+        
+        .msg-time { font-size: 11px; opacity: 0.6; margin-bottom: -2px; }
+        .del-msg-icon {
+            font-size: 12px; cursor: pointer; color: #ff6b6b; opacity: 0; transition: 0.2s; margin-top: 4px;
+        }
+        .message-wrapper.own:hover .del-msg-icon { opacity: 1; }
+
         .input-area {
-            padding: 14px 20px; background: var(--surface); border-top: 1px solid var(--border);
-            display: flex; align-items: flex-end; gap: 10px;
+            padding: 16px 20px; background: var(--surface); display: flex; gap: 10px; align-items: center;
         }
-        .input-wrapper {
-            flex: 1; background: var(--bg); border-radius: 22px; padding: 8px 16px; display: flex; align-items: center;
-        }
-        .message-input {
-            flex: 1; border: none; background: transparent; color: var(--text); font-size: 15px;
-            resize: none; max-height: 100px; min-height: 20px; outline: none;
+        .input-area input {
+            flex: 1; padding: 12px 16px; border-radius: 24px; border: none; background: var(--bg); color: white; font-size: 15px; outline: none;
         }
         .send-btn {
-            width: 44px; height: 44px; border-radius: 50%; border: none; background: var(--accent-light);
-            color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            width: 44px; height: 44px; border-radius: 50%; border: none; background: var(--accent-light); color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;
         }
-        .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-        /* Empty State */
-        .empty-chat {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            height: 100%; color: var(--text-secondary); text-align: center; padding: 40px;
+        .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        .empty-state {
+            flex: 1; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); text-align: center; flex-direction: column;
         }
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-<div class="auth-screen" id="auth-screen">
-    <div class="auth-card">
-        <div class="auth-logo">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 2L2 7l10 5 10-5-10-5z"></path><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline>
-            </svg>
-        </div>
-        <h1 class="auth-title" id="auth-title">Sigma Classes</h1>
-        <p class="auth-subtitle" id="auth-subtitle">Community Chat by Alok Sir & Adarsh Sir</p>
-
-        <div class="auth-error" id="auth-error"></div>
-
-        <form id="auth-form" onsubmit="return false;">
-            <div class="form-group" id="name-group" style="display:none;">
-                <label class="form-label">Display Name</label>
-                <input type="text" class="form-input" id="reg-name" placeholder="E.g., Rahul Kumar">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Username</label>
-                <input type="text" class="form-input" id="auth-username" placeholder="@username">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Password</label>
-                <input type="password" class="form-input" id="auth-password" placeholder="Minimum 6 characters">
-            </div>
-            <button type="submit" class="auth-btn" id="auth-btn">Sign In</button>
-        </form>
-
-        <div class="auth-toggle">
-            <span id="auth-toggle-text">Don't have an account?</span>
-            <span id="auth-toggle-link">Sign Up</span>
-        </div>
-    </div>
-</div>
-
-<div class="app" id="app">
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="search-box">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                <input type="text" placeholder="Contacts loaded from Cloud..." readonly>
-            </div>
-            <button id="logout-btn" style="background: none; border: none; color: var(--danger); cursor: pointer; font-weight: bold; margin-left: 10px;">Exit</button>
-        </div>
-        <div class="chat-list" id="chat-list">
-            </div>
-    </div>
-
-    <div class="chat-area" id="chat-area">
-        <div class="chat-header hidden" id="chat-header">
-            <img src="" class="chat-avatar" id="header-avatar" style="width: 40px; height: 40px;">
-            <div class="chat-header-info">
-                <div class="chat-header-name" id="header-name">Select a chat</div>
-                <div style="font-size: 13px; color: var(--accent-light);">Secure Private Room</div>
-            </div>
-        </div>
-
-        <div class="messages-area" id="messages-area">
-            <div class="empty-chat" id="empty-chat">
-                <div style="background: linear-gradient(135deg, #2b5278, #5eb5f7); width: 90px; height: 90px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 24px; color: white;">
-                    <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-                </div>
-                <h3 style="color: white; font-size: 20px; margin-bottom: 8px;">Sigma Classes Community</h3>
-                <p>Welcome to <b>Sigma Classes Community</b>. A safe space for students to connect, share, and learn together.</p>
-                <p style="margin-top: 16px; font-size: 12px; color: #5eb5f7;">👨‍🏫 Admin Access: Owner Only</p>
-            </div>
-            <div id="messages-container" style="display:none; flex-direction: column; gap: 4px;"></div>
-        </div>
-
-        <div class="input-area hidden" id="input-area">
-            <div class="input-wrapper">
-                <textarea class="message-input" id="message-input" placeholder="Message..." rows="1"></textarea>
-            </div>
-            <button class="send-btn" id="send-btn" disabled>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+    <div id="auth-screen">
+        <div class="auth-card">
+            <h1 style="margin-bottom: 8px;">Sigma Classes</h1>
+            <p style="color: var(--text-secondary); font-size: 14px;">Secure Community Messenger</p>
+            
+            <button class="google-btn" id="login-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                Sign in with Google
             </button>
+            <p id="auth-error" style="color: #ff6b6b; font-size: 13px; margin-top: 15px; display: none;"></p>
         </div>
     </div>
-</div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-    import { getFirestore, collection, doc, setDoc, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+    <div id="app">
+        
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="my-profile">
+                    <img src="" id="my-avatar" class="avatar">
+                    <div>
+                        <div id="my-name" style="font-weight: 600; font-size: 14px;"></div>
+                        <div style="font-size: 12px; color: var(--accent-light);">Online</div>
+                    </div>
+                </div>
+                <button class="logout-btn" id="logout-btn">Log Out</button>
+            </div>
+            
+            <div style="padding: 10px 16px; background: #131b24; font-size: 12px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px;">
+                Available Users
+            </div>
+            <div class="chat-list" id="contact-list">
+                </div>
+        </div>
 
-    // IMPORTANT: Replace with your actual Firebase Config
-    const firebaseConfig = {
-        apiKey: "AIzaSyBdz1-Y06YkgAD-Ty7AQkSRYb1dwNDAoqo",
-        authDomain: "sigmachat-7b6fc.firebaseapp.com",
-        projectId: "sigmachat-7b6fc",
-        storageBucket: "sigmachat-7b6fc.firebasestorage.app",
-        messagingSenderId: "991645777861",
-        appId: "1:991645777861:web:940b910b80fdcd90c815ac"
-    };
+        <div class="chat-area">
+            
+            <div class="empty-state" id="empty-state">
+                <div style="font-size: 48px; margin-bottom: 16px;">💬</div>
+                <h3>Welcome to Sigma Chat</h3>
+                <p style="margin-top: 8px;">Select a user from the left menu to start chatting securely.</p>
+            </div>
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    // App State
-    let isRegistering = false;
-    let currentUser = null;
-    let currentRoomId = null;
-    let unsubscribeUsers = null;
-    let unsubscribeMessages = null;
-
-    // DOM Elements
-    const DOM = {
-        authScreen: document.getElementById('auth-screen'),
-        appScreen: document.getElementById('app'),
-        authForm: document.getElementById('auth-form'),
-        authToggle: document.getElementById('auth-toggle-link'),
-        authError: document.getElementById('auth-error'),
-        authBtn: document.getElementById('auth-btn'),
-        chatList: document.getElementById('chat-list'),
-        chatHeader: document.getElementById('chat-header'),
-        headerName: document.getElementById('header-name'),
-        headerAvatar: document.getElementById('header-avatar'),
-        emptyChat: document.getElementById('empty-chat'),
-        msgContainer: document.getElementById('messages-container'),
-        inputArea: document.getElementById('input-area'),
-        msgInput: document.getElementById('message-input'),
-        sendBtn: document.getElementById('send-btn'),
-        logoutBtn: document.getElementById('logout-btn')
-    };
-
-    // --- 1. AUTHENTICATION LOGIC ---
-    DOM.authToggle.addEventListener('click', () => {
-        isRegistering = !isRegistering;
-        document.getElementById('auth-title').textContent = isRegistering ? 'Create Account' : 'Sigma Classes';
-        document.getElementById('auth-btn').textContent = isRegistering ? 'Sign Up' : 'Sign In';
-        document.getElementById('auth-toggle-text').textContent = isRegistering ? 'Already have an account?' : "Don't have an account?";
-        DOM.authToggle.textContent = isRegistering ? 'Sign In' : 'Sign Up';
-        document.getElementById('name-group').style.display = isRegistering ? 'block' : 'none';
-        DOM.authError.classList.remove('visible');
-    });
-
-    DOM.authForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const rawUsername = document.getElementById('auth-username').value.trim().toLowerCase();
-        const password = document.getElementById('auth-password').value;
-        const name = document.getElementById('reg-name').value.trim();
-
-        if (!rawUsername || !password) return showError("Please fill all fields");
-        if (password.length < 6) return showError("Password must be at least 6 characters");
-
-        // Secretly map username to email for Firebase
-        const fakeEmail = `${rawUsername.replace(/[^a-z0-9]/g, '')}@sigmachat.com`; 
-        DOM.authBtn.disabled = true;
-
-        try {
-            if (isRegistering) {
-                if (!name) throw new Error("Display Name is required");
-                const cred = await createUserWithEmailAndPassword(auth, fakeEmail, password);
+            <div id="active-chat" class="hidden" style="display: flex; flex-direction: column; height: 100%;">
                 
-                // Set default avatar based on name
-                const avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=2b5278&color=fff`;
-                await updateProfile(cred.user, { displayName: name, photoURL: avatar });
-                
-                // Save to Firestore Users collection
-                await setDoc(doc(db, 'users', cred.user.uid), {
-                    uid: cred.user.uid,
-                    displayName: name,
-                    avatar: avatar,
-                    username: rawUsername
-                });
-            } else {
-                await signInWithEmailAndPassword(auth, fakeEmail, password);
+                <div class="chat-header">
+                    <div class="chat-header-info">
+                        <img src="" id="chat-avatar" class="avatar">
+                        <span id="chat-name" style="font-weight: 600; font-size: 16px;"></span>
+                    </div>
+                    <button class="delete-chat-btn" id="clear-chat-btn">Clear Chat</button>
+                </div>
+
+                <div class="messages-container" id="messages">
+                    </div>
+
+                <div class="input-area">
+                    <input type="text" id="msg-input" placeholder="Type a message..." autocomplete="off">
+                    <button class="send-btn" id="send-btn" disabled>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-analytics.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, addDoc, deleteDoc, getDocs, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+        // Your exact Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBdz1-Y06YkgAD-Ty7AQkSRYb1dwNDAoqo",
+            authDomain: "sigmachat-7b6fc.firebaseapp.com",
+            projectId: "sigmachat-7b6fc",
+            storageBucket: "sigmachat-7b6fc.firebasestorage.app",
+            messagingSenderId: "991645777861",
+            appId: "1:991645777861:web:940b910b80fdcd90c815ac",
+            measurementId: "G-2Q93W5FHLD"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        let currentUser = null;
+        let currentRoomId = null;
+        let unsubUsers = null;
+        let unsubMessages = null;
+
+        // --- AUTHENTICATION FLOW ---
+        document.getElementById('login-btn').onclick = async () => {
+            try {
+                await signInWithPopup(auth, provider);
+            } catch (err) {
+                const errEl = document.getElementById('auth-error');
+                errEl.textContent = err.message;
+                errEl.style.display = 'block';
             }
-        } catch (error) {
-            console.error(error);
-            showError(error.message.replace('Firebase:', '').trim());
-            DOM.authBtn.disabled = false;
-        }
-    });
+        };
 
-    DOM.logoutBtn.addEventListener('click', () => signOut(auth));
+        document.getElementById('logout-btn').onclick = () => signOut(auth);
 
-    // Listen to login state
-    onAuthStateChanged(auth, (user) => {
-        DOM.authBtn.disabled = false;
-        if (user) {
-            currentUser = user;
-            DOM.authScreen.style.display = 'none';
-            DOM.appScreen.classList.add('active');
-            loadContacts();
-        } else {
-            currentUser = null;
-            DOM.appScreen.classList.remove('active');
-            DOM.authScreen.style.display = 'flex';
-            resetUI();
-        }
-    });
-
-    function showError(msg) {
-        DOM.authError.textContent = msg;
-        DOM.authError.classList.add('visible');
-        setTimeout(() => DOM.authError.classList.remove('visible'), 4000);
-    }
-
-    // --- 2. CONTACTS & CLOUD SYNC LOGIC ---
-    function loadContacts() {
-        if(unsubscribeUsers) unsubscribeUsers();
-        
-        // Listen to all users in the database
-        unsubscribeUsers = onSnapshot(collection(db, 'users'), (snapshot) => {
-            DOM.chatList.innerHTML = ''; 
-            
-            snapshot.forEach((docSnap) => {
-                const targetUser = docSnap.data();
-                if (targetUser.uid === currentUser.uid) return; // Hide self
-
-                const div = document.createElement('div');
-                div.className = 'chat-item';
-                div.innerHTML = `
-                    <img src="${targetUser.avatar}" class="chat-avatar">
-                    <div class="chat-info">
-                        <div class="chat-name">${targetUser.displayName}</div>
-                        <div style="font-size: 13px; color: var(--text-secondary);">@${targetUser.username}</div>
-                    </div>
-                `;
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // Logged In State
+                currentUser = user;
                 
-                div.addEventListener('click', () => {
-                    document.querySelectorAll('.chat-item').forEach(el => el.classList.remove('active'));
-                    div.classList.add('active');
-                    openPrivateChat(targetUser);
+                document.getElementById('auth-screen').style.display = 'none';
+                document.getElementById('app').classList.add('active');
+                
+                document.getElementById('my-name').textContent = user.displayName;
+                document.getElementById('my-avatar').src = user.photoURL;
+
+                // Save user to cloud so others see them in the sidebar
+                await setDoc(doc(db, 'users', user.uid), {
+                    uid: user.uid,
+                    name: user.displayName,
+                    photo: user.photoURL,
+                    email: user.email,
+                    lastLogin: serverTimestamp()
                 });
-                
-                DOM.chatList.appendChild(div);
-            });
+
+                loadUsers();
+            } else {
+                // Logged Out State
+                currentUser = null;
+                document.getElementById('app').classList.remove('active');
+                document.getElementById('auth-screen').style.display = 'flex';
+                resetChatUI();
+            }
         });
-    }
 
-    // --- 3. PRIVATE ROOM LOGIC ---
-    function openPrivateChat(targetUser) {
-        // Generate unique Room ID for these two specific users
-        const ids = [currentUser.uid, targetUser.uid].sort();
-        currentRoomId = `${ids[0]}_${ids[1]}`;
-
-        // Update UI
-        DOM.emptyChat.classList.add('hidden');
-        DOM.chatHeader.classList.remove('hidden');
-        DOM.msgContainer.style.display = 'flex';
-        DOM.inputArea.classList.remove('hidden');
-        
-        DOM.headerName.textContent = targetUser.displayName;
-        DOM.headerAvatar.src = targetUser.avatar;
-
-        listenToMessages(currentRoomId);
-    }
-
-    function listenToMessages(roomId) {
-        if (unsubscribeMessages) unsubscribeMessages();
-
-        const messagesRef = collection(db, 'rooms', roomId, 'messages');
-        const q = query(messagesRef, orderBy('timestamp', 'asc'));
-
-        unsubscribeMessages = onSnapshot(q, (snapshot) => {
-            DOM.msgContainer.innerHTML = ''; 
+        // --- LOAD USERS (SIDEBAR) ---
+        function loadUsers() {
+            if(unsubUsers) unsubUsers();
             
-            snapshot.forEach((change) => {
-                const data = change.data();
-                const isOwn = data.senderId === currentUser.uid;
-                const timeStr = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'Now';
+            unsubUsers = onSnapshot(collection(db, 'users'), (snapshot) => {
+                const list = document.getElementById('contact-list');
+                list.innerHTML = ''; 
+                
+                snapshot.forEach((docSnap) => {
+                    const user = docSnap.data();
+                    if (user.uid === currentUser.uid) return; // Do not show yourself
 
-                const msgDiv = document.createElement('div');
-                msgDiv.className = `message ${isOwn ? 'own' : ''}`;
-                msgDiv.innerHTML = `
-                    <div class="msg-bubble">
-                        ${data.text}
-                        <span class="msg-time">${timeStr}</span>
-                    </div>
-                `;
-                DOM.msgContainer.appendChild(msgDiv);
+                    const div = document.createElement('div');
+                    div.className = 'contact-item';
+                    div.innerHTML = `
+                        <img src="${user.photo}" class="avatar">
+                        <div style="font-weight: 500; font-size: 15px;">${user.name}</div>
+                    `;
+                    
+                    div.onclick = () => {
+                        document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active'));
+                        div.classList.add('active');
+                        openChat(user);
+                    };
+                    
+                    list.appendChild(div);
+                });
             });
-
-            // Scroll to bottom automatically
-            const area = document.getElementById('messages-area');
-            area.scrollTop = area.scrollHeight;
-        });
-    }
-
-    // --- 4. SENDING MESSAGES ---
-    DOM.msgInput.addEventListener('input', (e) => {
-        DOM.sendBtn.disabled = !e.target.value.trim();
-        e.target.style.height = 'auto';
-        e.target.style.height = Math.min(e.target.scrollHeight, 100) + 'px';
-    });
-
-    DOM.msgInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            sendMessage();
         }
-    });
 
-    DOM.sendBtn.addEventListener('click', sendMessage);
+        // --- OPEN CHAT ROOM ---
+        function openChat(targetUser) {
+            // Generates a unique, shared Room ID for these two users
+            const ids = [currentUser.uid, targetUser.uid].sort();
+            currentRoomId = `${ids[0]}_${ids[1]}`;
 
-    async function sendMessage() {
-        const text = DOM.msgInput.value.trim();
-        if (!text || !currentRoomId) return;
+            document.getElementById('empty-state').classList.add('hidden');
+            document.getElementById('active-chat').classList.remove('hidden');
+            document.getElementById('chat-name').textContent = targetUser.name;
+            document.getElementById('chat-avatar').src = targetUser.photo;
 
-        // Clear UI instantly
-        DOM.msgInput.value = '';
-        DOM.msgInput.style.height = 'auto';
-        DOM.sendBtn.disabled = true;
+            loadMessages(currentRoomId);
+        }
 
-        // Save to Firestore
-        await addDoc(collection(db, 'rooms', currentRoomId, 'messages'), {
-            text: text,
-            senderId: currentUser.uid,
-            timestamp: serverTimestamp()
-        });
-    }
+        // --- LOAD & RENDER MESSAGES ---
+        function loadMessages(roomId) {
+            if (unsubMessages) unsubMessages();
 
-    function resetUI() {
-        if(unsubscribeMessages) unsubscribeMessages();
-        if(unsubscribeUsers) unsubscribeUsers();
-        currentRoomId = null;
-        DOM.msgContainer.innerHTML = '';
-        DOM.emptyChat.classList.remove('hidden');
-        DOM.chatHeader.classList.add('hidden');
-        DOM.msgContainer.style.display = 'none';
-        DOM.inputArea.classList.add('hidden');
-    }
-</script>
+            const msgRef = collection(db, 'rooms', roomId, 'messages');
+            const q = query(msgRef, orderBy('timestamp', 'asc'));
+
+            unsubMessages = onSnapshot(q, (snapshot) => {
+                const container = document.getElementById('messages');
+                container.innerHTML = ''; 
+                
+                snapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const isOwn = data.senderId === currentUser.uid;
+                    const time = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
+
+                    const div = document.createElement('div');
+                    div.className = `message-wrapper ${isOwn ? 'own' : 'other'}`;
+                    
+                    div.innerHTML = `
+                        <div class="message">
+                            <span>${data.text}</span>
+                            <span class="msg-time">${time}</span>
+                        </div>
+                        ${isOwn ? `<div class="del-msg-icon" onclick="window.deleteSingleMessage('${docSnap.id}')">Delete</div>` : ''}
+                    `;
+                    
+                    container.appendChild(div);
+                });
+
+                container.scrollTop = container.scrollHeight; 
+            });
+        }
+
+        // --- SEND MESSAGES ---
+        const msgInput = document.getElementById('msg-input');
+        const sendBtn = document.getElementById('send-btn');
+
+        msgInput.oninput = () => sendBtn.disabled = !msgInput.value.trim();
+        msgInput.onkeydown = (e) => { if (e.key === 'Enter') sendMessage(); };
+        sendBtn.onclick = sendMessage;
+
+        async function sendMessage() {
+            const text = msgInput.value.trim();
+            if (!text || !currentRoomId) return;
+
+            msgInput.value = '';
+            sendBtn.disabled = true;
+
+            await addDoc(collection(db, 'rooms', currentRoomId, 'messages'), {
+                text: text,
+                senderId: currentUser.uid,
+                timestamp: serverTimestamp()
+            });
+        }
+
+        // --- DELETE LOGIC ---
+        window.deleteSingleMessage = async function(messageId) {
+            if (!currentRoomId) return;
+            if (confirm("Delete this message?")) {
+                await deleteDoc(doc(db, 'rooms', currentRoomId, 'messages', messageId));
+            }
+        };
+
+        document.getElementById('clear-chat-btn').onclick = async () => {
+            if (!currentRoomId) return;
+            if (confirm("Are you sure you want to permanently delete all messages in this chat?")) {
+                const msgRef = collection(db, 'rooms', currentRoomId, 'messages');
+                const snapshot = await getDocs(query(msgRef));
+                snapshot.forEach(async (docSnap) => {
+                    await deleteDoc(doc(db, 'rooms', currentRoomId, 'messages', docSnap.id));
+                });
+            }
+        };
+
+        function resetChatUI() {
+            if(unsubMessages) unsubMessages();
+            if(unsubUsers) unsubUsers();
+            currentRoomId = null;
+            document.getElementById('messages').innerHTML = '';
+            document.getElementById('empty-state').classList.remove('hidden');
+            document.getElementById('active-chat').classList.add('hidden');
+        }
+    </script>
 </body>
 </html>
