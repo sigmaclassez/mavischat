@@ -375,20 +375,6 @@
 
         .hidden { display: none !important; }
 
-        /* Debug panel */
-        .debug-panel {
-            position: fixed; bottom: 10px; left: 10px;
-            background: rgba(0,0,0,0.85); color: #00ff00;
-            padding: 10px 15px; border-radius: 8px;
-            font-family: monospace; font-size: 11px;
-            max-width: 350px; max-height: 200px;
-            overflow-y: auto; z-index: 9999;
-            border: 1px solid #333;
-        }
-        .debug-panel .debug-error { color: #ff4444; }
-        .debug-panel .debug-info { color: #44aaff; }
-        .debug-panel .debug-success { color: #44ff44; }
-
         /* Toast notification */
         .toast {
             position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
@@ -414,7 +400,6 @@
             .messages-container { padding: 16px; }
             .input-area { padding: 12px 16px; }
             .chat-header { padding: 12px 16px; }
-            .debug-panel { max-width: 250px; font-size: 10px; }
         }
 
         @media (min-width: 769px) {
@@ -446,11 +431,6 @@
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
     <div class="orb orb-3"></div>
-
-    <!-- Debug Panel -->
-    <div id="debugPanel" class="debug-panel">
-        <div class="debug-info">=== DEBUG CONSOLE ===</div>
-    </div>
 
     <!-- Toast for errors -->
     <div id="toast" class="toast"></div>
@@ -548,7 +528,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, addDoc, deleteDoc, getDocs, query, orderBy, onSnapshot, serverTimestamp, getDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, addDoc, deleteDoc, getDocs, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBdz1-Y06YkgAD-Ty7AQkSRYb1dwNDAoqo",
@@ -559,31 +539,9 @@
             appId: "1:991645777861:web:940b910b80fdcd90c815ac"
         };
 
-        // Debug logger
-        function debug(msg, type = 'info') {
-            const panel = document.getElementById('debugPanel');
-            const div = document.createElement('div');
-            div.className = type === 'error' ? 'debug-error' : type === 'success' ? 'debug-success' : 'debug-info';
-            const time = new Date().toLocaleTimeString();
-            div.textContent = `[${time}] ${msg}`;
-            panel.appendChild(div);
-            panel.scrollTop = panel.scrollHeight;
-            console.log(`[${type.toUpperCase()}] ${msg}`);
-        }
-
-        debug('=== APP STARTING ===');
-
-        let app, auth, db;
-        try {
-            app = initializeApp(firebaseConfig);
-            auth = getAuth(app);
-            db = getFirestore(app);
-            debug('Firebase initialized successfully', 'success');
-        } catch (err) {
-            debug('Firebase init FAILED: ' + err.message, 'error');
-            throw err;
-        }
-
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
         const provider = new GoogleAuthProvider();
 
         let currentUser = null;
@@ -603,25 +561,18 @@
 
         // --- AUTHENTICATION ---
         document.getElementById('login-btn').onclick = async () => {
-            debug('Login button clicked');
             try {
-                debug('Opening Google sign-in popup...');
-                const result = await signInWithPopup(auth, provider);
-                debug('Google sign-in SUCCESS: ' + result.user.email, 'success');
+                await signInWithPopup(auth, provider);
             } catch (err) {
-                debug('Google sign-in FAILED: ' + err.code + ' - ' + err.message, 'error');
+                console.error("Auth error:", err);
                 const errEl = document.getElementById('auth-error');
                 errEl.textContent = err.message;
             }
         };
 
-        document.getElementById('logout-btn').onclick = () => {
-            debug('Logout clicked');
-            signOut(auth);
-        };
+        document.getElementById('logout-btn').onclick = () => signOut(auth);
 
         onAuthStateChanged(auth, async (user) => {
-            debug('Auth state changed. User: ' + (user ? user.email : 'null'));
             if (user) {
                 currentUser = user;
                 document.getElementById('auth-screen').style.display = 'none';
@@ -630,7 +581,6 @@
                 document.getElementById('my-name').textContent = user.displayName;
                 document.getElementById('my-avatar').src = user.photoURL;
 
-                debug('Saving user to Firestore...');
                 try {
                     await setDoc(doc(db, 'users', user.uid), {
                         uid: user.uid,
@@ -639,10 +589,8 @@
                         email: user.email,
                         lastLogin: serverTimestamp()
                     });
-                    debug('User saved to Firestore successfully', 'success');
                 } catch (err) {
-                    debug('Failed to save user: ' + err.message, 'error');
-                    showToast('Error saving profile: ' + err.message);
+                    showToast("Error saving profile: " + err.message);
                 }
 
                 loadUsers();
@@ -657,17 +605,13 @@
         // --- LOAD USERS ---
         function loadUsers() {
             if(unsubUsers) unsubUsers();
-            debug('Loading users from Firestore...');
 
             unsubUsers = onSnapshot(collection(db, 'users'), (snapshot) => {
-                debug('Users snapshot received: ' + snapshot.size + ' users', 'success');
                 const list = document.getElementById('contact-list');
                 list.innerHTML = '';
-                let count = 0;
                 snapshot.forEach((docSnap) => {
                     const user = docSnap.data();
                     if (user.uid === currentUser.uid) return;
-                    count++;
 
                     const div = document.createElement('div');
                     div.className = 'contact-item';
@@ -689,10 +633,8 @@
                     };
                     list.appendChild(div);
                 });
-                debug('Displayed ' + count + ' other users', 'info');
             }, (err) => {
-                debug('USERS LISTENER ERROR: ' + err.code + ' - ' + err.message, 'error');
-                showToast('Failed to load users: ' + err.message);
+                showToast("Failed to load users: " + err.message);
             });
         }
 
@@ -700,9 +642,6 @@
         function openChat(targetUser) {
             const ids = [currentUser.uid, targetUser.uid].sort();
             currentRoomId = `${ids[0]}_${ids[1]}`;
-            debug('Opening chat room: ' + currentRoomId);
-            debug('My UID: ' + currentUser.uid);
-            debug('Target UID: ' + targetUser.uid);
 
             document.getElementById('empty-state').classList.add('hidden');
             document.getElementById('active-chat').classList.remove('hidden');
@@ -726,17 +665,12 @@
 
         // --- LOAD MESSAGES ---
         function loadMessages(roomId) {
-            if (unsubMessages) {
-                debug('Unsubscribing from previous messages');
-                unsubMessages();
-            }
+            if (unsubMessages) unsubMessages();
 
-            debug('Loading messages for room: ' + roomId);
             const msgRef = collection(db, 'rooms', roomId, 'messages');
             const q = query(msgRef, orderBy('timestamp', 'asc'));
 
             unsubMessages = onSnapshot(q, (snapshot) => {
-                debug('Messages snapshot received: ' + snapshot.size + ' messages', 'success');
                 const container = document.getElementById('messages');
                 container.innerHTML = '';
                 snapshot.forEach((docSnap) => {
@@ -756,8 +690,7 @@
                 });
                 container.scrollTop = container.scrollHeight;
             }, (err) => {
-                debug('MESSAGES LISTENER ERROR: ' + err.code + ' - ' + err.message, 'error');
-                showToast('Failed to load messages: ' + err.message);
+                showToast("Failed to load messages: " + err.message);
             });
         }
 
@@ -771,29 +704,21 @@
 
         async function sendMessage() {
             const text = msgInput.value.trim();
-            if (!text || !currentRoomId) {
-                debug('Cannot send: text=' + text + ', room=' + currentRoomId, 'error');
-                return;
-            }
+            if (!text || !currentRoomId) return;
 
             msgInput.value = '';
             sendBtn.disabled = true;
 
             try {
-                const msgData = {
+                await addDoc(collection(db, 'rooms', currentRoomId, 'messages'), {
                     text: text,
                     senderId: currentUser.uid,
                     senderName: currentUser.displayName,
                     senderPhoto: currentUser.photoURL,
                     timestamp: serverTimestamp()
-                };
-                debug('Sending message to room: ' + currentRoomId);
-                debug('Message data: ' + JSON.stringify(msgData));
-                const docRef = await addDoc(collection(db, 'rooms', currentRoomId, 'messages'), msgData);
-                debug('Message sent! Doc ID: ' + docRef.id, 'success');
+                });
             } catch (err) {
-                debug('SEND MESSAGE FAILED: ' + err.code + ' - ' + err.message, 'error');
-                showToast('Failed to send: ' + err.message);
+                showToast("Failed to send: " + err.message);
             }
 
             msgInput.focus();
@@ -805,10 +730,8 @@
             if (confirm("Delete this message?")) {
                 try {
                     await deleteDoc(doc(db, 'rooms', currentRoomId, 'messages', msgId));
-                    debug('Message deleted: ' + msgId, 'success');
                 } catch (err) {
-                    debug('DELETE FAILED: ' + err.message, 'error');
-                    showToast('Failed to delete: ' + err.message);
+                    showToast("Failed to delete: " + err.message);
                 }
             }
         };
@@ -820,10 +743,8 @@
                     const snapshot = await getDocs(query(collection(db, 'rooms', currentRoomId, 'messages')));
                     const deletePromises = snapshot.docs.map(d => deleteDoc(doc(db, 'rooms', currentRoomId, 'messages', d.id)));
                     await Promise.all(deletePromises);
-                    debug('Chat cleared: ' + snapshot.size + ' messages deleted', 'success');
                 } catch (err) {
-                    debug('CLEAR CHAT FAILED: ' + err.message, 'error');
-                    showToast('Failed to clear chat: ' + err.message);
+                    showToast("Failed to clear chat: " + err.message);
                 }
             }
         };
@@ -851,8 +772,6 @@
                 document.getElementById('chat-area').classList.remove('chat-visible');
             }
         });
-
-        debug('=== APP LOADED ===');
     </script>
 </body>
 </html>
